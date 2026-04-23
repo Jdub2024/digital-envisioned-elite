@@ -1,0 +1,10 @@
+streamlit
+qrcode
+pillow
+requests
+beautifulsoup4
+markdown
+pandas
+PyPDF2
+pyyaml
+resend
