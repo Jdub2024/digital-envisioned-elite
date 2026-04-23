@@ -56,11 +56,13 @@ if "lead_captured" not in st.session_state:
 
 # --- 1b. GLOBAL BRANDED BACKGROUND ---
 BG_IMAGE_PATH = Path(__file__).parent / "1000025401.jpg"
+BG_FALLBACK_PATH = Path(__file__).parent / "attached_assets" / "de-logo.jpg"
 
 def inject_background():
-    if not BG_IMAGE_PATH.exists():
+    bg_path = BG_IMAGE_PATH if BG_IMAGE_PATH.exists() else BG_FALLBACK_PATH
+    if not bg_path.exists():
         return
-    encoded = base64.b64encode(BG_IMAGE_PATH.read_bytes()).decode()
+    encoded = base64.b64encode(bg_path.read_bytes()).decode()
     st.markdown(
         f"""
         <style>
@@ -83,6 +85,22 @@ def inject_background():
     )
 
 inject_background()
+
+# --- 1c. MOBILE SIDEBAR FIX ---
+st.markdown(
+    '<style>'
+    '[data-testid="stSidebarNav"] {max-height: 100vh; overflow-y: auto;}'
+    '[data-testid="stSidebarContent"] {max-height: 100vh; overflow-y: auto;}'
+    '[data-testid="stSidebar"] > div:first-child {max-height: 100vh; overflow-y: auto;}'
+    '.css-1d391kg {overflow-y: auto; max-height: 100vh;}'
+    '@media (max-width: 768px) {'
+    '  [data-testid="stSidebar"] {overflow-y: auto !important; -webkit-overflow-scrolling: touch;}'
+    '  [data-testid="stSidebarContent"] {overflow-y: auto !important; max-height: 100dvh;}'
+    '}'
+    '</style>',
+    unsafe_allow_html=True,
+)
+
 
 # --- 1c. LEAD CAPTURE GATE ---
 LEADS_FILE = Path(__file__).parent / "leads.csv"
@@ -593,52 +611,52 @@ FREE_TOOLS_GRID = [
     {
         "num": "1", "name": "QR Generator",
         "desc": "Generate custom QR codes for any URL, text, or contact card instantly.",
-        "img": "https://images.unsplash.com/photo-1595079676339-1534801ad6cf?w=800&q=85",
+        "img": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MDAiIGhlaWdodD0iNTAwIiB2aWV3Qm94PSIwIDAgODAwIDUwMCI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImJnIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3R5bGU9InN0b3AtY29sb3I6IzFFM0E1RjtzdG9wLW9wYWNpdHk6MSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMyRTg2QUI7c3RvcC1vcGFjaXR5OjEiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgogIDxyZWN0IHdpZHRoPSI4MDAiIGhlaWdodD0iNTAwIiByeD0iMTYiIGZpbGw9InVybCgjYmcpIi8+CiAgPHRleHQgeD0iNDAwIiB5PSIyMjAiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyMCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIG9wYWNpdHk9IjAuOSI+8J+TsTwvdGV4dD4KICA8dGV4dCB4PSI0MDAiIHk9IjM0MCIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMzYiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgb3BhY2l0eT0iMC45NSI+UVIgR2VuZXJhdG9yPC90ZXh0PgogIDx0ZXh0IHg9IjQwMCIgeT0iMzg1IiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIG9wYWNpdHk9IjAuNiI+RGlnaXRhbCBFbnZpc2lvbmVkIEVsaXRlIFN1aXRlPC90ZXh0Pgo8L3N2Zz4=",
     },
     {
         "num": "2", "name": "WebP Compressor",
         "desc": "Compress and convert images to WebP format for lightning-fast web pages.",
-        "img": "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=800&q=85",
+        "img": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MDAiIGhlaWdodD0iNTAwIiB2aWV3Qm94PSIwIDAgODAwIDUwMCI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImJnIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3R5bGU9InN0b3AtY29sb3I6IzJEMUI2OTtzdG9wLW9wYWNpdHk6MSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiM3QjRERkY7c3RvcC1vcGFjaXR5OjEiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgogIDxyZWN0IHdpZHRoPSI4MDAiIGhlaWdodD0iNTAwIiByeD0iMTYiIGZpbGw9InVybCgjYmcpIi8+CiAgPHRleHQgeD0iNDAwIiB5PSIyMjAiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyMCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIG9wYWNpdHk9IjAuOSI+8J+WvO+4jzwvdGV4dD4KICA8dGV4dCB4PSI0MDAiIHk9IjM0MCIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMzYiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgb3BhY2l0eT0iMC45NSI+V2ViUCBDb21wcmVzc29yPC90ZXh0PgogIDx0ZXh0IHg9IjQwMCIgeT0iMzg1IiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIG9wYWNpdHk9IjAuNiI+RGlnaXRhbCBFbnZpc2lvbmVkIEVsaXRlIFN1aXRlPC90ZXh0Pgo8L3N2Zz4=",
     },
     {
         "num": "3", "name": "SEO Scraper",
         "desc": "Extract meta tags, headings, and SEO data from any webpage in seconds.",
-        "img": "https://images.unsplash.com/photo-1562577309-4932fdd64cd1?w=800&q=85",
+        "img": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MDAiIGhlaWdodD0iNTAwIiB2aWV3Qm94PSIwIDAgODAwIDUwMCI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImJnIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3R5bGU9InN0b3AtY29sb3I6IzFCNDMzMjtzdG9wLW9wYWNpdHk6MSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiM0MDkxNkM7c3RvcC1vcGFjaXR5OjEiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgogIDxyZWN0IHdpZHRoPSI4MDAiIGhlaWdodD0iNTAwIiByeD0iMTYiIGZpbGw9InVybCgjYmcpIi8+CiAgPHRleHQgeD0iNDAwIiB5PSIyMjAiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyMCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIG9wYWNpdHk9IjAuOSI+8J+UjTwvdGV4dD4KICA8dGV4dCB4PSI0MDAiIHk9IjM0MCIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMzYiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgb3BhY2l0eT0iMC45NSI+U0VPIFNjcmFwZXI8L3RleHQ+CiAgPHRleHQgeD0iNDAwIiB5PSIzODUiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgb3BhY2l0eT0iMC42Ij5EaWdpdGFsIEVudmlzaW9uZWQgRWxpdGUgU3VpdGU8L3RleHQ+Cjwvc3ZnPg==",
     },
     {
         "num": "4", "name": "Password Generator",
         "desc": "Create ultra-secure passwords with customizable length and complexity.",
-        "img": "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=800&q=85",
+        "img": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MDAiIGhlaWdodD0iNTAwIiB2aWV3Qm94PSIwIDAgODAwIDUwMCI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImJnIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3R5bGU9InN0b3AtY29sb3I6IzNDMTUxODtzdG9wLW9wYWNpdHk6MSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiNENjI4Mjg7c3RvcC1vcGFjaXR5OjEiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgogIDxyZWN0IHdpZHRoPSI4MDAiIGhlaWdodD0iNTAwIiByeD0iMTYiIGZpbGw9InVybCgjYmcpIi8+CiAgPHRleHQgeD0iNDAwIiB5PSIyMjAiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyMCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIG9wYWNpdHk9IjAuOSI+8J+UkDwvdGV4dD4KICA8dGV4dCB4PSI0MDAiIHk9IjM0MCIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMzYiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgb3BhY2l0eT0iMC45NSI+UGFzc3dvcmQgR2VuPC90ZXh0PgogIDx0ZXh0IHg9IjQwMCIgeT0iMzg1IiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIG9wYWNpdHk9IjAuNiI+RGlnaXRhbCBFbnZpc2lvbmVkIEVsaXRlIFN1aXRlPC90ZXh0Pgo8L3N2Zz4=",
     },
     {
         "num": "5", "name": "Case Formatter",
         "desc": "Convert text between UPPER, lower, Title, and Sentence case formats.",
-        "img": "https://images.unsplash.com/photo-1456324504439-367cee3b3c32?w=800&q=85",
+        "img": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MDAiIGhlaWdodD0iNTAwIiB2aWV3Qm94PSIwIDAgODAwIDUwMCI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImJnIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3R5bGU9InN0b3AtY29sb3I6IzFBMUEyRTtzdG9wLW9wYWNpdHk6MSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMxNjIxM0U7c3RvcC1vcGFjaXR5OjEiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgogIDxyZWN0IHdpZHRoPSI4MDAiIGhlaWdodD0iNTAwIiByeD0iMTYiIGZpbGw9InVybCgjYmcpIi8+CiAgPHRleHQgeD0iNDAwIiB5PSIyMjAiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyMCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIG9wYWNpdHk9IjAuOSI+8J+UpDwvdGV4dD4KICA8dGV4dCB4PSI0MDAiIHk9IjM0MCIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMzYiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgb3BhY2l0eT0iMC45NSI+Q2FzZSBGb3JtYXR0ZXI8L3RleHQ+CiAgPHRleHQgeD0iNDAwIiB5PSIzODUiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgb3BhY2l0eT0iMC42Ij5EaWdpdGFsIEVudmlzaW9uZWQgRWxpdGUgU3VpdGU8L3RleHQ+Cjwvc3ZnPg==",
     },
     {
         "num": "6", "name": "Hashtag Generator",
         "desc": "Generate trending, relevant hashtags for any topic or niche.",
-        "img": "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800&q=85",
+        "img": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MDAiIGhlaWdodD0iNTAwIiB2aWV3Qm94PSIwIDAgODAwIDUwMCI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImJnIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3R5bGU9InN0b3AtY29sb3I6IzJDMkM1NDtzdG9wLW9wYWNpdHk6MSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiM0NzQ3ODc7c3RvcC1vcGFjaXR5OjEiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgogIDxyZWN0IHdpZHRoPSI4MDAiIGhlaWdodD0iNTAwIiByeD0iMTYiIGZpbGw9InVybCgjYmcpIi8+CiAgPHRleHQgeD0iNDAwIiB5PSIyMjAiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyMCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIG9wYWNpdHk9IjAuOSI+I++4j+KDozwvdGV4dD4KICA8dGV4dCB4PSI0MDAiIHk9IjM0MCIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMzYiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgb3BhY2l0eT0iMC45NSI+SGFzaHRhZyBHZW48L3RleHQ+CiAgPHRleHQgeD0iNDAwIiB5PSIzODUiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgb3BhY2l0eT0iMC42Ij5EaWdpdGFsIEVudmlzaW9uZWQgRWxpdGUgU3VpdGU8L3RleHQ+Cjwvc3ZnPg==",
     },
     {
         "num": "7", "name": "UTM Builder",
         "desc": "Build tracked campaign URLs with UTM parameters for precise analytics.",
-        "img": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=85",
+        "img": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MDAiIGhlaWdodD0iNTAwIiB2aWV3Qm94PSIwIDAgODAwIDUwMCI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImJnIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3R5bGU9InN0b3AtY29sb3I6IzBBMjY0NztzdG9wLW9wYWNpdHk6MSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMyMDUyOTU7c3RvcC1vcGFjaXR5OjEiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgogIDxyZWN0IHdpZHRoPSI4MDAiIGhlaWdodD0iNTAwIiByeD0iMTYiIGZpbGw9InVybCgjYmcpIi8+CiAgPHRleHQgeD0iNDAwIiB5PSIyMjAiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyMCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIG9wYWNpdHk9IjAuOSI+8J+UlzwvdGV4dD4KICA8dGV4dCB4PSI0MDAiIHk9IjM0MCIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMzYiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgb3BhY2l0eT0iMC45NSI+VVRNIEJ1aWxkZXI8L3RleHQ+CiAgPHRleHQgeD0iNDAwIiB5PSIzODUiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgb3BhY2l0eT0iMC42Ij5EaWdpdGFsIEVudmlzaW9uZWQgRWxpdGUgU3VpdGU8L3RleHQ+Cjwvc3ZnPg==",
     },
     {
         "num": "8", "name": "MD to HTML",
         "desc": "Convert Markdown documents to clean, formatted HTML with live preview.",
-        "img": "https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=800&q=85",
+        "img": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MDAiIGhlaWdodD0iNTAwIiB2aWV3Qm94PSIwIDAgODAwIDUwMCI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImJnIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3R5bGU9InN0b3AtY29sb3I6IzNEMDA2NjtzdG9wLW9wYWNpdHk6MSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiNBODU1Rjc7c3RvcC1vcGFjaXR5OjEiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgogIDxyZWN0IHdpZHRoPSI4MDAiIGhlaWdodD0iNTAwIiByeD0iMTYiIGZpbGw9InVybCgjYmcpIi8+CiAgPHRleHQgeD0iNDAwIiB5PSIyMjAiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyMCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIG9wYWNpdHk9IjAuOSI+8J+TnTwvdGV4dD4KICA8dGV4dCB4PSI0MDAiIHk9IjM0MCIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMzYiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgb3BhY2l0eT0iMC45NSI+TUQgdG8gSFRNTDwvdGV4dD4KICA8dGV4dCB4PSI0MDAiIHk9IjM4NSIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBvcGFjaXR5PSIwLjYiPkRpZ2l0YWwgRW52aXNpb25lZCBFbGl0ZSBTdWl0ZTwvdGV4dD4KPC9zdmc+",
     },
     {
         "num": "9", "name": "CSV to JSON",
         "desc": "Transform CSV data into structured JSON format for APIs and databases.",
-        "img": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=85",
+        "img": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MDAiIGhlaWdodD0iNTAwIiB2aWV3Qm94PSIwIDAgODAwIDUwMCI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImJnIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3R5bGU9InN0b3AtY29sb3I6IzFFM0E1RjtzdG9wLW9wYWNpdHk6MSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiMyRTg2QUI7c3RvcC1vcGFjaXR5OjEiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgogIDxyZWN0IHdpZHRoPSI4MDAiIGhlaWdodD0iNTAwIiByeD0iMTYiIGZpbGw9InVybCgjYmcpIi8+CiAgPHRleHQgeD0iNDAwIiB5PSIyMjAiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyMCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIG9wYWNpdHk9IjAuOSI+8J+TijwvdGV4dD4KICA8dGV4dCB4PSI0MDAiIHk9IjM0MCIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMzYiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgb3BhY2l0eT0iMC45NSI+Q1NWIHRvIEpTT048L3RleHQ+CiAgPHRleHQgeD0iNDAwIiB5PSIzODUiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgb3BhY2l0eT0iMC42Ij5EaWdpdGFsIEVudmlzaW9uZWQgRWxpdGUgU3VpdGU8L3RleHQ+Cjwvc3ZnPg==",
     },
     {
         "num": "10", "name": "Keyword Density",
         "desc": "Analyze keyword frequency and density to optimize your content for SEO.",
-        "img": "https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?w=800&q=85",
+        "img": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MDAiIGhlaWdodD0iNTAwIiB2aWV3Qm94PSIwIDAgODAwIDUwMCI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImJnIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3R5bGU9InN0b3AtY29sb3I6IzRBMTk0MjtzdG9wLW9wYWNpdHk6MSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiNDNzM4NjY7c3RvcC1vcGFjaXR5OjEiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgogIDxyZWN0IHdpZHRoPSI4MDAiIGhlaWdodD0iNTAwIiByeD0iMTYiIGZpbGw9InVybCgjYmcpIi8+CiAgPHRleHQgeD0iNDAwIiB5PSIyMjAiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyMCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIG9wYWNpdHk9IjAuOSI+8J+OrzwvdGV4dD4KICA8dGV4dCB4PSI0MDAiIHk9IjM0MCIgZm9udC1mYW1pbHk9IkFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMzYiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgb3BhY2l0eT0iMC45NSI+S2V5d29yZCBEZW5zaXR5PC90ZXh0PgogIDx0ZXh0IHg9IjQwMCIgeT0iMzg1IiBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIG9wYWNpdHk9IjAuNiI+RGlnaXRhbCBFbnZpc2lvbmVkIEVsaXRlIFN1aXRlPC90ZXh0Pgo8L3N2Zz4=",
     },
 ]
 
@@ -1234,6 +1252,8 @@ if selected_tool == "Dashboard Home":
     st.caption("Open any expander in the left sidebar to launch a specific tool.")
 
 elif selected_tool == "1. QR Generator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Generate custom QR codes from any URL, text, or contact info. Perfect for marketing materials, business cards, and digital campaigns.")
     url = st.text_input("URL:")
     if st.button("Generate"):
         qr = qrcode.make(url)
@@ -1243,6 +1263,8 @@ elif selected_tool == "1. QR Generator":
         st.download_button("Download", buf.getvalue(), "qr.png")
 
 elif selected_tool == "2. WebP Compressor":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Compress and convert images to WebP format for faster load times. Reduce file sizes by up to 80% without losing visual quality.")
     f = st.file_uploader("Upload", type=['jpg','png'])
     if f:
         img = Image.open(f)
@@ -1251,6 +1273,8 @@ elif selected_tool == "2. WebP Compressor":
         st.download_button("Download WebP", buf.getvalue(), "img.webp")
 
 elif selected_tool == "3. SEO Scraper":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Extract meta tags, headings, and SEO data from any webpage. Analyze competitor pages and optimize your own site's search ranking.")
     u = st.text_input("URL:")
     if st.button("Audit"):
         r = requests.get(u, headers={'User-Agent': 'Mozilla/5.0'})
@@ -1258,37 +1282,53 @@ elif selected_tool == "3. SEO Scraper":
         st.write(f"Title: {s.title.text if s.title else 'None'}")
 
 elif selected_tool == "4. Password Gen":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Create ultra-secure passwords with customizable length and special characters. Protect your business accounts with uncrackable credentials.")
     l = st.slider("Length", 8, 32, 16)
     st.code(''.join(random.choice(string.ascii_letters + string.digits) for _ in range(l)))
 
 elif selected_tool == "5. Case Formatter":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Convert text between UPPER, lower, Title, and Sentence case formats. Format content perfectly for headlines, social posts, and documents.")
     t = st.text_area("Text:")
     if t:
         st.write(f"Title: {t.title()}")
         st.write(f"Upper: {t.upper()}")
 
 elif selected_tool == "6. Hashtag Gen":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Generate trending, niche-relevant hashtags for any topic. Boost social media reach by targeting the right audiences with optimized tags.")
     kw = st.text_input("Keyword:")
     if kw: st.write(f"#{kw} #business #marketing")
 
 elif selected_tool == "7. UTM Builder":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Build tracked campaign URLs with UTM parameters for Google Analytics. Measure which ads, emails, and posts drive the most traffic.")
     url = st.text_input("URL:")
     src = st.text_input("Source:")
     if url and src: st.code(f"{url}?utm_source={src}")
 
 elif selected_tool == "8. MD to HTML":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Convert Markdown to clean, formatted HTML with a live preview. Streamline blog publishing and documentation workflows.")
     md = st.text_area("Markdown:")
     if md: st.code(markdown.markdown(md))
 
 elif selected_tool == "9. CSV to JSON":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Transform CSV spreadsheet data into structured JSON format. Prepare data for APIs, databases, and modern web applications.")
     f = st.file_uploader("CSV", type="csv")
     if f: st.json(pd.read_csv(f).to_json(orient='records'))
 
 elif selected_tool == "10. Keyword Density":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Analyze keyword frequency and density in any text block. Optimize your content for SEO without over-stuffing keywords.")
     t = st.text_area("Text:")
     if t: st.write(Counter(t.split()).most_common(5))
 
 elif selected_tool == "11. PDF Locker":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Lock PDF files with password protection. Secure sensitive documents before sharing with clients or partners.")
     f = st.file_uploader("PDF", type="pdf")
     pw = st.text_input("Password", type="password")
     if f and pw:
@@ -1301,6 +1341,8 @@ elif selected_tool == "11. PDF Locker":
         st.download_button("Download Locked PDF", buf.getvalue(), "locked.pdf")
 
 elif selected_tool == "12. Ad Resizer":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Merge multiple PDF documents into a single file. Combine contracts, reports, and presentations into one professional package.")
     f = st.file_uploader("Image", type=['jpg','png'])
     if f:
         img = Image.open(f)
@@ -1308,6 +1350,8 @@ elif selected_tool == "12. Ad Resizer":
         st.write("Resized to 1080x1080")
 
 elif selected_tool == "13. Link Checker":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Split a PDF into individual pages or custom ranges. Extract exactly the pages you need without editing the original.")
     u = st.text_input("URL:")
     if u and st.button("Check"):
         try:
@@ -1316,86 +1360,126 @@ elif selected_tool == "13. Link Checker":
         except: st.error("Offline")
 
 elif selected_tool == "14. Lorem Ipsum":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Convert PDF documents to editable Word format. Edit and repurpose content from PDFs without retyping everything.")
     p = st.slider("Paragraphs", 1, 5, 1)
     st.write("Lorem ipsum dolor sit amet... " * p)
 
 elif selected_tool == "15. Slug Maker":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Extract all text content from uploaded PDF files. Pull data from invoices, reports, and scanned documents quickly.")
     t = st.text_input("Title:")
     if t: st.code(t.lower().replace(" ", "-"))
 
 elif selected_tool == "16. Email Val":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Rotate PDF pages to correct orientation. Fix sideways or upside-down scans before sharing or printing.")
     e = st.text_input("Email:")
     if e: st.write("Valid" if "@" in e and "." in e else "Invalid")
 
 elif selected_tool == "17. YT Thumbnails":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Add watermark text to every page of a PDF. Brand and protect your documents from unauthorized distribution.")
     v = st.text_input("YT URL:")
     if "v=" in v:
         id = v.split("v=")[1]
         st.image(f"https://img.youtube.com/vi/{id}/maxresdefault.jpg")
 
 elif selected_tool == "18. TTS Preview":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Compress PDF files to reduce their size. Share large documents via email by shrinking them significantly.")
     txt = st.text_input("Speak:")
     if st.button("Play"):
         st.components.v1.html(f"<script>window.speechSynthesis.speak(new SpeechSynthesisUtterance('{txt}'));</script>")
 
 elif selected_tool == "19. JSON Pretty":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Convert images (JPG, PNG) to PDF format. Package visual content into professional, shareable PDF documents.")
     j = st.text_area("JSON:")
     if j: st.json(json.loads(j))
 
 elif selected_tool == "20. Site Screenshot":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Extract metadata from PDF files. View author, creation date, and document properties for auditing.")
     u = st.text_input("URL:")
     if u: st.image(f"https://api.screenshotmachine.com/?key=free&url={u}&dimension=1024x768")
 
 elif selected_tool == "21. Char Counter":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Encrypt text with AES-256 encryption. Protect sensitive messages and data with military-grade encryption.")
     t = st.text_area("Text:")
     st.write(f"Chars: {len(t)} | Words: {len(t.split())}")
 
 elif selected_tool == "22. Expense Log":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Decrypt AES-256 encrypted text back to plaintext. Retrieve your protected messages when you need them.")
     it = st.text_input("Item:")
     pr = st.number_input("Price:")
     if st.button("Log"): st.write(f"Saved: {it} - ${pr}")
 
 elif selected_tool == "23. Unit Conv":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Generate RSA key pairs for secure communication. Create public/private key pairs for encryption and digital signatures.")
     v = st.number_input("MB:")
     st.write(f"{v/1024:.2f} GB")
 
 elif selected_tool == "24. Base64":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Calculate file hash checksums (MD5, SHA-256). Verify file integrity and detect tampering or corruption.")
     t = st.text_input("Text:")
     if t: st.code(base64.b64encode(t.encode()).decode())
 
 elif selected_tool == "25. Color Hex":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Securely wipe and overwrite file data. Ensure deleted sensitive files cannot be recovered.")
     c = st.color_picker("Pick:")
     st.write(f"Hex: {c}")
 
 elif selected_tool == "26. Grayscale":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Generate strong, random passwords. Protect your accounts with passwords that cannot be guessed.")
     f = st.file_uploader("Img")
     if f: st.image(Image.open(f).convert('L'))
 
 elif selected_tool == "27. Sentiment":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Encode and decode text using Caesar cipher. Learn classical cryptography and create simple coded messages.")
     t = st.text_input("Copy:")
     st.write("Positive" if any(x in t.lower() for x in ['great','easy','save']) else "Neutral")
 
 elif selected_tool == "28. Name Picker":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Encode and decode Morse code. Convert between text and Morse for creative or educational purposes.")
     n = st.text_area("Names (1 per line):")
     if st.button("Pick"): st.write(random.choice(n.split('\n')))
 
 elif selected_tool == "29. Binary Decoder":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Encode text in Base64 and decode it back. Essential for working with APIs, data transfer, and email encoding.")
     b = st.text_input("Binary:")
     if b: st.code("".join(chr(int(x, 2)) for x in b.split()))
 
 elif selected_tool == "30. Domain Ideas":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Generate secure tokens for authentication. Create API keys and session tokens that resist brute-force attacks.")
     k = st.text_input("Keyword:")
     if k: st.write([f"{k}{s}" for s in ['.com', '.net', '.io']])
 
 elif selected_tool == "31. Bio Gen":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Extract dominant colors from images. Build brand palettes from photos and reference designs.")
     j = st.text_input("Job:")
     if j: st.code(f"🚀 {j} | Helping brands grow!")
 
 elif selected_tool == "32. Tip Calc":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Resize images to exact dimensions. Prepare images for social media, ads, and website requirements.")
     b = st.number_input("Bill:")
     st.write(f"Total w/ 20%: ${b*1.2:.2f}")
 
 elif selected_tool == "33. List Shuffler":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Crop images to custom regions. Frame photos perfectly for profiles, thumbnails, and listings.")
     l = st.text_area("Items:")
     if l:
         items = l.split('\n')
@@ -1403,49 +1487,75 @@ elif selected_tool == "33. List Shuffler":
         st.write(items)
 
 elif selected_tool == "34. CSS Helper":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("View EXIF data from image files. See camera settings, GPS data, and metadata from photos.")
     st.code("display: flex; justify-content: center;")
 
 elif selected_tool == "35. Contrast Check":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Convert SVG vector graphics to PNG raster images. Export scalable graphics for platforms that require bitmap formats.")
     bg = st.color_picker("BG", "#FFFFFF")
     fg = st.color_picker("Text", "#000000")
     st.markdown(f"<div style='background:{bg}; color:{fg}; padding:10px'>Sample</div>", unsafe_allow_html=True)
 
 elif selected_tool == "36. Robots.txt":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Compress images with adjustable quality settings. Reduce image file sizes while maintaining acceptable visual quality.")
     st.code("User-agent: *\nDisallow: /admin")
 
 elif selected_tool == "37. Word Cloud":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Create animated GIFs from multiple images. Build eye-catching animations for social media and presentations.")
     t = st.text_area("Keywords:")
     if t: st.write(Counter(t.split()).most_common(10))
 
 elif selected_tool == "38. Persona Gen":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Convert images between formats (PNG, JPEG, WebP). Switch image formats to match platform requirements.")
     if st.button("Gen"): st.write("Persona: Small Biz Owner, Goal: Leads")
 
 elif selected_tool == "39. Link Hub":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Apply artistic filters and effects to images. Transform ordinary photos into striking visual content.")
     st.write("[Digital Envisioned](https://digitalenvisioned.net)")
 
 elif selected_tool == "40. Daily Planner":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Generate color palettes from images. Extract and organize the key colors from any visual reference.")
     t = st.text_input("Task:")
     if t: st.checkbox(t)
 
 elif selected_tool == "41. Row Counter":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Calculate compound interest over time. Model investment returns and understand long-term growth.")
     f = st.file_uploader("CSV")
     if f: st.write(f"Rows: {len(pd.read_csv(f))}")
 
 elif selected_tool == "42. Morse Code":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Calculate loan payments and amortization schedules. Plan your financing with precise monthly payment projections.")
     st.code("... --- ...")
 
 elif selected_tool == "43. Load Sim":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Estimate income tax across brackets. Plan ahead for tax obligations and optimize your structure.")
     s = st.slider("Size MB", 1, 10, 2)
     st.write(f"Load: {s*1.5}s")
 
 elif selected_tool == "44. Niche Finder":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Calculate investment returns over time. Forecast portfolio growth with different contribution scenarios.")
     st.write("Try: Church Lead Automation")
 
 elif selected_tool == "45. Icon Resizer":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Track and split group expenses. Settle up fairly after trips, dinners, and shared projects.")
     f = st.file_uploader("Icon")
     if f: st.image(Image.open(f).resize((512,512)))
 
 elif selected_tool == "46. Image to PDF":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Convert between currencies using live rates. Calculate international payments and travel budgets accurately.")
     fs = st.file_uploader("Images", accept_multiple_files=True)
     if fs and st.button("PDF"):
         imgs = [Image.open(x).convert("RGB") for x in fs]
@@ -1454,20 +1564,30 @@ elif selected_tool == "46. Image to PDF":
         st.download_button("Download PDF", buf.getvalue(), "files.pdf")
 
 elif selected_tool == "47. Audio Player":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Calculate net take-home pay from salary. Understand your real earnings after taxes and deductions.")
     st.write("Ready to play preview.")
 
 elif selected_tool == "48. Funnel Calc":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Calculate tips and split bills among groups. Handle restaurant checks and service gratuities effortlessly.")
     v = st.number_input("Visits", 1000)
     st.write(f"Expected Sales (2%): {v*0.02}")
 
 elif selected_tool == "49. Favicon Fetch":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Estimate business profit margins. Set prices that cover costs and deliver healthy profits.")
     d = st.text_input("Domain:")
     if d: st.image(f"https://www.google.com/s2/favicons?sz=64&domain={d}")
 
 elif selected_tool == "50. Hub Info":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Calculate discounts and sale prices. Run promotions with precise pricing that protects your margins.")
     st.write("Digital Envisioned Suite v1.0 | Joshua Eugene Newton")
 # --- TOOL 51: Sermon Quote Card Gen ---
 elif selected_tool == "51. Sermon Quote Card Gen":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Count the frequency of words in text. Identify overused words and improve writing variety.")
     st.header("Sermon Quote Creator")
     text = st.text_area("Enter Sermon Quote:")
     bg_color = st.color_picker("Pick Background Color", "#1e1e1e")
@@ -1478,6 +1598,8 @@ elif selected_tool == "51. Sermon Quote Card Gen":
 
 # --- TOOL 52: Prayer Request Organizer ---
 elif selected_tool == "52. Prayer Request Organizer":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Compare two texts and highlight differences. Track changes in documents, contracts, and content revisions.")
     st.header("Prayer Wall Manager")
     req = st.text_area("Paste raw prayer requests here:")
     if st.button("Format for Staff"):
@@ -1487,6 +1609,8 @@ elif selected_tool == "52. Prayer Request Organizer":
 
 # --- TOOL 53: Attendance Growth Tracker ---
 elif selected_tool == "53. Attendance Growth Tracker":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Generate Lorem Ipsum placeholder text. Speed up design mockups with realistic dummy content.")
     st.header("Growth Analytics")
     weeks = st.text_input("Enter weekly numbers (comma separated):", "100, 120, 115, 140")
     if weeks:
@@ -1495,6 +1619,8 @@ elif selected_tool == "53. Attendance Growth Tracker":
 
 # --- TOOL 54: Scripture Reference Finder ---
 elif selected_tool == "54. Scripture Reference Finder":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Create URL-friendly slugs from text. Build clean, SEO-optimized URLs for your web pages.")
     st.header("Quick Scripture Lookup")
     ref = st.text_input("Enter Verse (e.g., John 3:16):")
     if ref:
@@ -1503,6 +1629,8 @@ elif selected_tool == "54. Scripture Reference Finder":
 
 # --- TOOL 55: Volunteer Rotation Builder ---
 elif selected_tool == "55. Volunteer Rotation Builder":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Summarize long text into key points. Extract essential information from lengthy documents quickly.")
     st.header("Volunteer Randomizer")
     names = st.text_area("Enter Names (one per line):")
     if st.button("Generate Sunday Roster"):
@@ -1512,6 +1640,8 @@ elif selected_tool == "55. Volunteer Rotation Builder":
 
 # --- TOOL 56: Digital Offering Estimator ---
 elif selected_tool == "56. Digital Offering Estimator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Check text for grammar and style issues. Polish your writing before publishing or sending to clients.")
     st.header("Giving Projection")
     avg = st.number_input("Average Weekly Giving ($):", value=1000)
     growth = st.slider("Expected Growth (%)", 0, 50, 5)
@@ -1519,6 +1649,8 @@ elif selected_tool == "56. Digital Offering Estimator":
 
 # --- TOOL 57: Event Countdown Timer ---
 elif selected_tool == "57. Event Countdown Timer":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Count words, characters, and paragraphs. Meet content requirements and optimize for ideal length.")
     st.header("Service Countdown")
     event_name = st.text_input("Event Name:", "Sunday Celebration")
     st.success(f"Countdown active for {event_name}")
@@ -1526,6 +1658,8 @@ elif selected_tool == "57. Event Countdown Timer":
 
 # --- TOOL 58: Hymn Slideshow Generator ---
 elif selected_tool == "58. Hymn Slideshow Generator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Generate text in random order or patterns. Create unique content variations for testing and brainstorming.")
     st.header("Lyric Slide Builder")
     lyrics = st.text_area("Paste Lyrics:")
     if st.button("Generate Slides"):
@@ -1534,6 +1668,8 @@ elif selected_tool == "58. Hymn Slideshow Generator":
             st.info(verse)
 
 elif selected_tool == "59. Image Watermark Generator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Find and replace text across documents. Make bulk edits to content efficiently and accurately.")
     st.header("Image Watermark Generator")
     up = st.file_uploader("Upload image (PNG/JPG)", type=["png", "jpg", "jpeg"])
     text = st.text_input("Watermark text:", "© Digital Envisioned")
@@ -1559,6 +1695,8 @@ elif selected_tool == "59. Image Watermark Generator":
         st.download_button("Download PNG", buf.getvalue(), "watermarked.png", "image/png")
 
 elif selected_tool == "60. Bulk Image Resizer":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Translate text between languages. Communicate across language barriers with instant translation.")
     st.header("Bulk Image Resizer")
     ups = st.file_uploader("Upload images", type=["png", "jpg", "jpeg", "webp"], accept_multiple_files=True)
     w = st.number_input("Target width (px)", 50, 5000, 800)
@@ -1581,6 +1719,8 @@ elif selected_tool == "60. Bulk Image Resizer":
         st.download_button("Download All (ZIP)", zip_buf.getvalue(), "resized_images.zip", "application/zip")
 
 elif selected_tool == "61. Color Palette Extractor":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Create flashcard-style study sets. Learn and memorize key concepts with spaced repetition.")
     st.header("Color Palette Extractor")
     up = st.file_uploader("Upload image", type=["png", "jpg", "jpeg"])
     n = st.slider("Number of colors", 3, 12, 6)
@@ -1601,6 +1741,8 @@ elif selected_tool == "61. Color Palette Extractor":
                 )
 
 elif selected_tool == "62. EXIF Data Viewer":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Generate multiple-choice quiz questions. Test knowledge retention and create educational assessments.")
     st.header("EXIF Data Viewer")
     up = st.file_uploader("Upload JPEG/TIFF", type=["jpg", "jpeg", "tiff", "tif"])
     if up:
@@ -1617,6 +1759,8 @@ elif selected_tool == "62. EXIF Data Viewer":
             st.error(f"Could not read EXIF: {e}")
 
 elif selected_tool == "63. SVG to PNG Converter":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Build study schedule timelines. Organize learning goals into manageable daily study plans.")
     st.header("SVG to PNG Converter")
     up = st.file_uploader("Upload SVG", type=["svg"])
     width = st.number_input("Output width (px)", 50, 4000, 800)
@@ -1633,6 +1777,8 @@ elif selected_tool == "63. SVG to PNG Converter":
             st.download_button("Download original SVG", svg_bytes, "original.svg", "image/svg+xml")
 
 elif selected_tool == "64. Image Cropper Tool":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Track reading progress and notes. Build a personal knowledge library with organized annotations.")
     st.header("Image Cropper")
     up = st.file_uploader("Upload image", type=["png", "jpg", "jpeg"])
     if up:
@@ -1653,6 +1799,8 @@ elif selected_tool == "64. Image Cropper Tool":
             st.download_button("Download cropped PNG", buf.getvalue(), "cropped.png", "image/png")
 
 elif selected_tool == "65. Meme Generator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Create vocabulary building exercises. Expand your word power with structured learning activities.")
     st.header("Meme Generator")
     up = st.file_uploader("Upload base image", type=["png", "jpg", "jpeg"])
     top_text = st.text_input("Top text:", "WHEN MONDAY HITS")
@@ -1683,6 +1831,8 @@ elif selected_tool == "65. Meme Generator":
         st.download_button("Download meme", buf.getvalue(), "meme.png", "image/png")
 
 elif selected_tool == "66. GIF Maker":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Map concepts and relationships visually. Understand complex topics by visualizing connections.")
     st.header("GIF Maker (Images → Animated GIF)")
     ups = st.file_uploader("Upload 2+ frames (in order)", type=["png", "jpg", "jpeg"], accept_multiple_files=True)
     duration = st.slider("Frame delay (ms)", 50, 2000, 400)
@@ -1698,6 +1848,8 @@ elif selected_tool == "66. GIF Maker":
         st.download_button("Download GIF", buf.getvalue(), "animation.gif", "image/gif")
 
 elif selected_tool == "67. Audio Format Converter":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Generate research outlines and frameworks. Structure academic and business research methodically.")
     st.header("Audio Format Converter")
     up = st.file_uploader("Upload audio file", type=["wav", "mp3", "ogg", "flac", "m4a"])
     target = st.selectbox("Convert to", ["wav", "mp3", "ogg", "flac"])
@@ -1714,6 +1866,8 @@ elif selected_tool == "67. Audio Format Converter":
             st.error(f"Audio conversion requires ffmpeg + pydub. Detail: {e}")
 
 elif selected_tool == "68. Video to Audio Extractor":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Create presentation outlines from topics. Build compelling slide decks with logical flow and structure.")
     st.header("Video → Audio Extractor")
     up = st.file_uploader("Upload video", type=["mp4", "mov", "mkv", "webm", "avi"])
     if up and st.button("Extract Audio"):
@@ -1734,6 +1888,8 @@ elif selected_tool == "68. Video to Audio Extractor":
             st.error(f"Video extraction requires moviepy + ffmpeg. Detail: {e}")
 
 elif selected_tool == "69. Video Thumbnail Grabber":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Track assignments and deadlines. Never miss a deadline with organized task tracking.")
     st.header("Video Thumbnail Grabber")
     up = st.file_uploader("Upload video", type=["mp4", "mov", "mkv", "webm"])
     t_sec = st.number_input("Capture at second:", 0.0, 3600.0, 1.0, 0.5)
@@ -1755,6 +1911,8 @@ elif selected_tool == "69. Video Thumbnail Grabber":
             st.error(f"Thumbnail extraction requires moviepy + ffmpeg. Detail: {e}")
 
 elif selected_tool == "70. YouTube Transcript Extractor":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Calculate and visualize GPA. Monitor academic performance and plan for improvement.")
     st.header("YouTube Transcript Extractor")
     yt = st.text_input("YouTube URL or video ID:")
     if yt and st.button("Fetch Transcript"):
@@ -1773,6 +1931,8 @@ elif selected_tool == "70. YouTube Transcript Extractor":
                 st.error(f"Could not fetch transcript: {e}")
 
 elif selected_tool == "71. Image Filter Applier":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Create event planning checklists. Ensure nothing is missed with comprehensive event timelines.")
     st.header("Image Filter Applier")
     up = st.file_uploader("Upload image", type=["png", "jpg", "jpeg"])
     fx = st.selectbox("Filter", ["Grayscale", "Sepia", "Blur", "Sharpen", "Edge Enhance", "Invert"])
@@ -1802,6 +1962,8 @@ elif selected_tool == "71. Image Filter Applier":
         st.download_button("Download", buf.getvalue(), f"{fx.lower()}.png", "image/png")
 
 elif selected_tool == "72. Background Remover":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Calculate BMI and health metrics. Track personal health indicators for wellness goals.")
     st.header("Background Remover")
     up = st.file_uploader("Upload image", type=["png", "jpg", "jpeg"])
     if up and st.button("Remove Background"):
@@ -1828,6 +1990,8 @@ elif selected_tool == "72. Background Remover":
             st.download_button("Download PNG", buf.getvalue(), "no_bg.png", "image/png")
 
 elif selected_tool == "73. Aspect Ratio Calculator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Plan meals with nutritional calculations. Optimize nutrition and meal prep for health and budget.")
     st.header("Aspect Ratio Calculator")
     c1, c2 = st.columns(2)
     with c1:
@@ -1847,6 +2011,8 @@ elif selected_tool == "73. Aspect Ratio Calculator":
         st.info(f"{'Matches' if ratio_match else 'Does NOT match'} the original aspect ratio.")
 
 elif selected_tool == "74. DPI Converter":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Track workout routines and sets. Build consistent fitness habits with structured logging.")
     st.header("DPI Converter")
     up = st.file_uploader("Upload image", type=["png", "jpg", "jpeg", "tiff"])
     dpi = st.number_input("Target DPI", 36, 1200, 300)
@@ -1861,6 +2027,8 @@ elif selected_tool == "74. DPI Converter":
                            f"image_{dpi}dpi.{fmt.lower()}", f"image/{fmt.lower()}")
 
 elif selected_tool == "75. Font Previewer":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Estimate daily calorie requirements. Set nutrition targets based on activity level and goals.")
     st.header("Font Previewer")
     text = st.text_input("Sample text:", "The quick brown fox jumps over the lazy dog.")
     size = st.slider("Size (px)", 16, 96, 48)
@@ -1880,6 +2048,8 @@ elif selected_tool == "75. Font Previewer":
             continue
 
 elif selected_tool == "76. JSON Validator & Formatter":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Calculate water intake goals. Stay properly hydrated based on body weight and activity.")
     st.header("JSON Validator & Formatter")
     raw = st.text_area("Paste JSON:", height=220)
     indent = st.slider("Indent", 0, 8, 2)
@@ -1894,6 +2064,8 @@ elif selected_tool == "76. JSON Validator & Formatter":
             st.error(f"Invalid JSON at line {e.lineno}, col {e.colno}: {e.msg}")
 
 elif selected_tool == "77. Regex Tester":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Track sleep patterns and quality. Improve rest by understanding your sleep habits.")
     st.header("Regex Tester")
     pattern = st.text_input("Pattern:", r"\b\w+@\w+\.\w+\b")
     flags_sel = st.multiselect("Flags", ["IGNORECASE", "MULTILINE", "DOTALL"])
@@ -1915,6 +2087,8 @@ elif selected_tool == "77. Regex Tester":
             st.error(f"Bad regex: {e}")
 
 elif selected_tool == "78. SQL Query Formatter":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Plan and track personal goals. Turn ambitions into achievable milestones with deadlines.")
     st.header("SQL Query Formatter")
     sql = st.text_area("Paste SQL:", height=220)
     if sql and st.button("Format"):
@@ -1932,6 +2106,8 @@ elif selected_tool == "78. SQL Query Formatter":
         st.download_button("Download .sql", pretty, "formatted.sql", "text/plain")
 
 elif selected_tool == "79. Hash Generator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Log daily moods and journal entries. Build self-awareness and track mental wellness trends.")
     st.header("Hash Generator")
     txt = st.text_area("Input text:")
     algos = st.multiselect("Algorithms", ["md5", "sha1", "sha256", "sha512"], default=["md5", "sha1", "sha256"])
@@ -1942,6 +2118,8 @@ elif selected_tool == "79. Hash Generator":
             st.code(h)
 
 elif selected_tool == "80. JWT Decoder":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Build and track daily habits. Develop positive routines that compound into success.")
     st.header("JWT Decoder")
     token = st.text_area("Paste JWT (header.payload.signature):", height=130)
     if token and st.button("Decode"):
@@ -1964,6 +2142,8 @@ elif selected_tool == "80. JWT Decoder":
                 st.error(f"Decode failed: {e}")
 
 elif selected_tool == "81. URL Encoder/Decoder":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Generate sermon quotes with attributions. Create shareable quote graphics for ministry content.")
     st.header("URL Encoder / Decoder")
     mode = st.radio("Mode", ["Encode", "Decode"], horizontal=True)
     txt = st.text_area("Text:", height=150)
@@ -1973,6 +2153,8 @@ elif selected_tool == "81. URL Encoder/Decoder":
         st.download_button("Download .txt", result, "url_result.txt", "text/plain")
 
 elif selected_tool == "82. HTML Sanitizer":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Manage community prayer requests. Organize and respond to prayer needs within your group.")
     st.header("HTML Sanitizer")
     raw = st.text_area("Paste HTML:", height=220)
     mode = st.radio("Mode", ["Strip all tags (plain text)", "Escape entities only"], index=0)
@@ -1986,6 +2168,8 @@ elif selected_tool == "82. HTML Sanitizer":
         st.download_button("Download .txt", cleaned, "sanitized.txt", "text/plain")
 
 elif selected_tool == "83. XML to JSON Converter":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Track attendance and growth metrics. Monitor community engagement with visual analytics.")
     st.header("XML → JSON Converter")
     raw = st.text_area("Paste XML:", height=220)
     if raw and st.button("Convert"):
@@ -2026,6 +2210,8 @@ elif selected_tool == "83. XML to JSON Converter":
             st.error(f"Could not parse XML: {e}")
 
 elif selected_tool == "84. CRON Expression Generator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Look up Bible verses quickly. Find and reference scripture for study and content creation.")
     st.header("CRON Expression Generator")
     st.caption("Build a 5-field cron string: minute hour day month weekday")
     minute = st.text_input("Minute (0-59 or *)", "0")
@@ -2048,6 +2234,8 @@ elif selected_tool == "84. CRON Expression Generator":
         st.success(f"{pick}: `{presets[pick]}`")
 
 elif selected_tool == "85. Diff Checker":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Randomly assign volunteer roles. Distribute tasks fairly among volunteers and team members.")
     st.header("Diff Checker")
     c1, c2 = st.columns(2)
     with c1:
@@ -2074,6 +2262,8 @@ elif selected_tool == "85. Diff Checker":
             )
 
 elif selected_tool == "86. Markdown to HTML Previewer":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Project giving trends and goals. Forecast financial contributions and plan budgets accordingly.")
     st.header("Markdown → HTML Previewer")
     md = st.text_area("Paste Markdown:", height=260,
                       value="# Welcome\n\nWrite **bold** or *italic*, add `code`, and [links](https://digitalenvisioned.net).")
@@ -2092,6 +2282,8 @@ elif selected_tool == "86. Markdown to HTML Previewer":
         st.download_button("Download .html", html_out, "preview.html", "text/html")
 
 elif selected_tool == "87. CSV to JSON Converter":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Create countdown timers for events. Build anticipation with visual countdowns to important dates.")
     st.header("CSV → JSON Converter")
     up = st.file_uploader("Upload CSV", type=["csv"])
     pasted = st.text_area("…or paste CSV here:", height=180)
@@ -2108,6 +2300,8 @@ elif selected_tool == "87. CSV to JSON Converter":
             st.error(f"Could not parse CSV: {e}")
 
 elif selected_tool == "88. Secure Password Generator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Build lyric slide presentations. Create worship slides with formatted lyrics and backgrounds.")
     st.header("Secure Password Generator")
     length = st.slider("Length", 8, 128, 20)
     use_upper = st.checkbox("Uppercase A-Z", True)
@@ -2129,6 +2323,8 @@ elif selected_tool == "88. Secure Password Generator":
                 st.code("".join(secrets.choice(pool) for _ in range(length)))
 
 elif selected_tool == "89. Base64 String Encoder":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Add watermarks to images to protect content. Brand your visual assets and prevent unauthorized use.")
     st.header("Base64 String Encoder / Decoder")
     mode = st.radio("Mode", ["Encode", "Decode"], horizontal=True)
     txt = st.text_area("Input:", height=180)
@@ -2145,6 +2341,8 @@ elif selected_tool == "89. Base64 String Encoder":
             st.error(f"{mode} failed: {e}")
 
 elif selected_tool == "90. IP Address Data Extractor":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Resize multiple images at once. Process entire photo batches to consistent dimensions efficiently.")
     st.header("IP Address Data Extractor")
     ip = st.text_input("IP address (leave blank for your own):", "")
     if st.button("Lookup"):
@@ -2172,6 +2370,8 @@ elif selected_tool == "90. IP Address Data Extractor":
             st.error(f"Network/API error: {e}")
 
 elif selected_tool == "91. ROI Calculator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Extract color palettes from images. Build design systems based on dominant colors in photos.")
     st.header("ROI Calculator")
     cost = st.number_input("Investment cost ($)", 0.0, 1e9, 1000.0, 50.0)
     gain = st.number_input("Total return / final value ($)", 0.0, 1e9, 1500.0, 50.0)
@@ -2184,6 +2384,8 @@ elif selected_tool == "91. ROI Calculator":
         else: st.info("Break-even.")
 
 elif selected_tool == "92. Compound Interest Forecaster":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("View and extract EXIF metadata from photos. Access camera settings, locations, and timestamps from images.")
     st.header("Compound Interest Forecaster")
     p = st.number_input("Principal ($)", 0.0, 1e9, 10000.0, 100.0)
     r = st.number_input("Annual rate (%)", 0.0, 100.0, 7.0, 0.1) / 100
@@ -2200,6 +2402,8 @@ elif selected_tool == "92. Compound Interest Forecaster":
     st.line_chart(schedule.set_index("Year"))
 
 elif selected_tool == "93. Freelance Hourly Rate Calculator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Convert SVG files to PNG format. Export vector graphics as bitmaps for universal compatibility.")
     st.header("Freelance / Agency Hourly Rate Calculator")
     salary = st.number_input("Desired annual take-home ($)", 0.0, 1e7, 80000.0, 1000.0)
     expenses = st.number_input("Annual business expenses ($)", 0.0, 1e7, 12000.0, 500.0)
@@ -2212,6 +2416,8 @@ elif selected_tool == "93. Freelance Hourly Rate Calculator":
     st.metric("Target annual revenue", f"${revenue:,.2f}")
 
 elif selected_tool == "94. E-commerce Profit Margin Calculator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Crop images to specific dimensions. Frame content precisely for any platform or purpose.")
     st.header("E-commerce Profit Margin Calculator")
     price = st.number_input("Sale price ($)", 0.0, 1e6, 49.99, 0.5)
     cogs = st.number_input("Cost of goods ($)", 0.0, 1e6, 12.0, 0.5)
@@ -2226,6 +2432,8 @@ elif selected_tool == "94. E-commerce Profit Margin Calculator":
     st.caption(f"Fees deducted: ${fees:,.2f}")
 
 elif selected_tool == "95. Subscription Burn-Rate Tracker":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Create memes with custom text overlays. Generate viral social content with text-on-image templates.")
     st.header("Subscription Burn-Rate Tracker")
     cash = st.number_input("Cash on hand ($)", 0.0, 1e9, 50000.0, 500.0)
     monthly_rev = st.number_input("Monthly recurring revenue ($)", 0.0, 1e9, 8000.0, 100.0)
@@ -2242,6 +2450,8 @@ elif selected_tool == "95. Subscription Burn-Rate Tracker":
         elif runway < 12: st.warning("Tight — under 12 months of runway.")
 
 elif selected_tool == "96. Stripe Transaction Fee Calculator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Create animated GIFs from image sequences. Build attention-grabbing animations for social and web.")
     st.header("Stripe Transaction Fee Calculator")
     amount = st.number_input("Charge amount ($)", 0.0, 1e6, 100.0, 1.0)
     pct = st.number_input("% rate", 0.0, 10.0, 2.9, 0.1)
@@ -2254,6 +2464,8 @@ elif selected_tool == "96. Stripe Transaction Fee Calculator":
     st.caption(f"To net ${amount:,.2f}, charge customer ${gross_up:,.2f}.")
 
 elif selected_tool == "97. Rule-of-72 Investment Calculator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Apply Instagram-style filters to photos. Enhance visual content with professional color treatments.")
     st.header("Rule of 72 — Time to Double")
     rate = st.number_input("Annual return (%)", 0.01, 100.0, 8.0, 0.1)
     years = 72 / rate
@@ -2263,6 +2475,8 @@ elif selected_tool == "97. Rule-of-72 Investment Calculator":
                                index=[f"{r}%" for r in range(1, 21)]))
 
 elif selected_tool == "98. Business Sales Tax Calculator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Collage multiple images into one layout. Combine photos into polished grids and layouts.")
     st.header("Business Sales Tax Calculator")
     amount = st.number_input("Pre-tax amount ($)", 0.0, 1e7, 100.0, 1.0)
     rate = st.number_input("Sales tax rate (%)", 0.0, 30.0, 9.0, 0.1)
@@ -2272,6 +2486,8 @@ elif selected_tool == "98. Business Sales Tax Calculator":
     st.caption("Birmingham, AL combined rate is typically ~10%. Adjust for your jurisdiction.")
 
 elif selected_tool == "99. Break-Even Point Analyzer":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Generate color palettes from any image. Extract harmonious colors for branding and design work.")
     st.header("Break-Even Point Analyzer")
     fixed = st.number_input("Fixed costs ($/month)", 0.0, 1e7, 5000.0, 100.0)
     price = st.number_input("Price per unit ($)", 0.01, 1e6, 49.0, 1.0)
@@ -2286,6 +2502,8 @@ elif selected_tool == "99. Break-Even Point Analyzer":
         st.caption(f"Contribution margin: ${contrib:,.2f}/unit ({contrib / price * 100:.1f}%)")
 
 elif selected_tool == "100. Quick Invoice Text Generator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Detect and blur faces in images. Protect privacy in photos before sharing publicly.")
     st.header("Quick Invoice Text Generator")
     biz = st.text_input("Your business name", "Digital Envisioned")
     client = st.text_input("Client name", "Acme Co.")
@@ -2316,6 +2534,8 @@ elif selected_tool == "100. Quick Invoice Text Generator":
         st.download_button("Download .txt", invoice, f"{inv_no}.txt", "text/plain")
 
 elif selected_tool == "101. SaaS Churn Rate Calculator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Convert images between file formats. Switch between PNG, JPEG, WebP, and more as needed.")
     st.header("SaaS Churn Rate Calculator")
     start = st.number_input("Customers at start of period", 0, 10_000_000, 500)
     lost = st.number_input("Customers lost during period", 0, 10_000_000, 25)
@@ -2330,6 +2550,8 @@ elif selected_tool == "101. SaaS Churn Rate Calculator":
         st.caption("Healthy SaaS: customer churn < 5%/mo, revenue churn < 2%/mo.")
 
 elif selected_tool == "102. Discount & Markup Calculator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Remove image backgrounds automatically. Create clean product photos and profile images instantly.")
     st.header("Discount & Markup Calculator")
     mode = st.radio("Mode", ["Discount", "Markup"], horizontal=True)
     base = st.number_input("Base price ($)", 0.0, 1e7, 100.0, 1.0)
@@ -2344,6 +2566,8 @@ elif selected_tool == "102. Discount & Markup Calculator":
         st.metric("Profit added", f"${final - base:,.2f}")
 
 elif selected_tool == "103. Keyword Density Analyzer":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Detect edges and objects in images. Analyze visual content for design and technical purposes.")
     st.header("Keyword Density Analyzer")
     txt = st.text_area("Paste your content:", height=260)
     if txt:
@@ -2362,6 +2586,8 @@ elif selected_tool == "103. Keyword Density Analyzer":
             st.dataframe(df, use_container_width=True)
 
 elif selected_tool == "104. Meta Tag Generator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Overlay images with adjustable transparency. Create composite images for marketing and branding.")
     st.header("Meta Tag Generator")
     title = st.text_input("Page title", "Digital Envisioned — Birmingham Automation")
     desc = st.text_area("Meta description (≤160 chars)", "200 automation tools for Birmingham businesses.", height=80)
@@ -2391,6 +2617,8 @@ elif selected_tool == "104. Meta Tag Generator":
         st.download_button("Download .html", out, "meta_tags.html", "text/html")
 
 elif selected_tool == "105. SEO Word & Character Counter":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Generate thumbnails from images. Create optimized preview images for websites and galleries.")
     st.header("SEO Word & Character Counter")
     txt = st.text_area("Content:", height=260)
     if txt:
@@ -2409,6 +2637,8 @@ elif selected_tool == "105. SEO Word & Character Counter":
         st.caption("Google snippet titles ≤ 60 chars · meta descriptions ≤ 160 chars.")
 
 elif selected_tool == "106. Readability Score Estimator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Adjust image brightness and contrast. Fine-tune photo exposure for professional results.")
     st.header("Readability Score (Flesch-Kincaid)")
     txt = st.text_area("Paste text:", height=260)
     if txt:
@@ -2438,6 +2668,8 @@ elif selected_tool == "106. Readability Score Estimator":
         else: st.warning("Hard to read — consider simplifying.")
 
 elif selected_tool == "107. Lorem Ipsum Placeholder Generator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Reduce image noise and grain. Clean up low-light photos for cleaner, sharper output.")
     st.header("Lorem Ipsum Generator")
     paragraphs = st.slider("Paragraphs", 1, 20, 3)
     sentences = st.slider("Sentences per paragraph", 1, 12, 5)
@@ -2458,6 +2690,8 @@ elif selected_tool == "107. Lorem Ipsum Placeholder Generator":
     st.download_button("Download .txt", text, "lorem.txt", "text/plain")
 
 elif selected_tool == "108. Text Case Converter":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Sharpen blurry or soft images. Enhance image clarity for print and digital use.")
     st.header("Text Case Converter")
     txt = st.text_area("Input text:", "Hello world from digital envisioned", height=140)
     if txt:
@@ -2476,6 +2710,8 @@ elif selected_tool == "108. Text Case Converter":
         st.write("**kebab-case**"); st.code(kebab)
 
 elif selected_tool == "109. UTM Campaign Link Builder":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Create panoramic images from multiple shots. Stitch photos together into wide-angle compositions.")
     st.header("UTM Campaign Link Builder")
     base_url = st.text_input("Destination URL", "https://digitalenvisioned.net/")
     src = st.text_input("utm_source", "newsletter")
@@ -2493,6 +2729,8 @@ elif selected_tool == "109. UTM Campaign Link Builder":
         st.download_button("Download .txt", link, "utm_link.txt", "text/plain")
 
 elif selected_tool == "110. Hashtag Formatter":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Compare two images side by side. Spot differences and review before/after edits visually.")
     st.header("Hashtag Formatter")
     raw = st.text_area("Paste tags or phrases (one per line or comma-separated):",
                        "small business automation, birmingham al\nseo growth, conversion optimization", height=160)
@@ -2508,6 +2746,8 @@ elif selected_tool == "110. Hashtag Formatter":
         st.caption(f"{len(tags)} hashtags · {len(out)} chars")
 
 elif selected_tool == "111. Twitter/X Strict Character Counter":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Run a complete SEO audit on any URL. Identify optimization opportunities and fix ranking issues.")
     st.header("Twitter / X Character Counter")
     txt = st.text_area("Compose your post:", height=180)
     LIMIT = 280
@@ -2524,6 +2764,8 @@ elif selected_tool == "111. Twitter/X Strict Character Counter":
     else: st.success("You have room to spare.")
 
 elif selected_tool == "112. Instagram Bio Spacer":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Analyze website page load speed. Find performance bottlenecks that slow down your site.")
     st.header("Instagram Bio Spacer (Preserves Line Breaks)")
     raw = st.text_area("Paste your bio (use blank lines for spacing):",
                        "Birmingham AL automation\n\nBuilt for small business\n\n👇 Free 10 tools below", height=200)
@@ -2534,6 +2776,8 @@ elif selected_tool == "112. Instagram Bio Spacer":
         st.download_button("Download .txt", out, "ig_bio.txt", "text/plain")
 
 elif selected_tool == "113. Bullet Point to Comma List Converter":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Test whether a website is mobile-friendly. Ensure your site looks great on smartphones and tablets.")
     st.header("Bullet Points → Comma List")
     raw = st.text_area("Paste a bullet list:", "- Speed\n- Accuracy\n- Profit\n• Reliability", height=180)
     sep = st.text_input("Separator", ", ")
@@ -2545,6 +2789,8 @@ elif selected_tool == "113. Bullet Point to Comma List Converter":
         st.caption(f"{len(lines)} items · {len(out)} chars")
 
 elif selected_tool == "114. Whitespace & Line Break Remover":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Check for broken links across your website. Fix dead links that hurt SEO and frustrate visitors.")
     st.header("Whitespace & Line Break Remover")
     raw = st.text_area("Paste text:", height=220)
     mode = st.radio("Strategy", [
@@ -2563,6 +2809,8 @@ elif selected_tool == "114. Whitespace & Line Break Remover":
         st.caption(f"Before: {len(raw)} chars · After: {len(out)} chars")
 
 elif selected_tool == "115. Email Subject Line Previewer":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Analyze a page's backlink profile. Understand your site's authority and link-building opportunities.")
     st.header("Email Subject Line Previewer")
     sender = st.text_input("Sender name", "Joshua Newton")
     subject = st.text_input("Subject line", "Your free 10 automation tools are ready")
@@ -2598,6 +2846,8 @@ elif selected_tool == "115. Email Subject Line Previewer":
 
 # ===== Content & Text Utilities (116-125) =====
 elif selected_tool == "116. Blog Title Generator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Research search volume for target keywords. Find high-value keywords worth targeting in your content.")
     st.header("Blog Title Generator")
     keywords = st.text_input("Topic / keywords (comma-separated)", "small business automation, Birmingham")
     n = st.slider("How many titles", 5, 30, 12)
@@ -2630,6 +2880,8 @@ elif selected_tool == "116. Blog Title Generator":
         st.download_button("Download .txt", "\n".join(out), "titles.txt", "text/plain")
 
 elif selected_tool == "117. CTA Generator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Analyze competitor SEO strategies. Reverse-engineer what's working for your competition.")
     st.header("Call-to-Action (CTA) Generator")
     product = st.text_input("Product / offer", "Free 10-Tool Suite")
     audience = st.text_input("Audience", "Birmingham small business owners")
@@ -2650,6 +2902,8 @@ elif selected_tool == "117. CTA Generator":
         st.download_button("Download .txt", "\n".join(out), "ctas.txt", "text/plain")
 
 elif selected_tool == "118. Text to Morse Code Converter":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Generate structured data markup (Schema.org). Help search engines understand your content for rich results.")
     st.header("Text ↔ Morse Code Converter")
     MORSE = {
         'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.', 'F': '..-.', 'G': '--.', 'H': '....',
@@ -2675,6 +2929,8 @@ elif selected_tool == "118. Text to Morse Code Converter":
         st.caption("Use ' / ' between words.")
 
 elif selected_tool == "119. Binary ↔ Text Converter":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Track and analyze SERP positions. Monitor your search rankings and spot trends over time.")
     st.header("Binary ↔ Text Converter")
     mode = st.radio("Mode", ["Text → Binary", "Binary → Text"], horizontal=True)
     txt = st.text_area("Input:", height=160)
@@ -2690,6 +2946,8 @@ elif selected_tool == "119. Binary ↔ Text Converter":
             st.error(f"Conversion failed: {e}")
 
 elif selected_tool == "120. Basic Sentiment Analyzer":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Check content for duplicate or thin pages. Ensure every page provides unique value to visitors and search engines.")
     st.header("Basic Sentiment Analyzer")
     POS = set("good great excellent amazing love loved fantastic wonderful best brilliant happy joy enjoy enjoyed nice perfect awesome positive win wins winning success successful pleased delighted recommend recommended outstanding incredible".split())
     NEG = set("bad terrible awful hate hated worst horrible poor sad angry mad disappointed disappointing fail failed failing problem problems broken useless waste boring annoying frustrating slow late expensive ripoff scam".split())
@@ -2711,6 +2969,8 @@ elif selected_tool == "120. Basic Sentiment Analyzer":
         c3.metric("Total words", len(words))
 
 elif selected_tool == "121. Webpage Text Extractor":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Generate email templates for cold outreach. Start conversations with prospects using proven frameworks.")
     st.header("Webpage Text Extractor")
     url = st.text_input("Page URL", "https://digitalenvisioned.net/")
     if url and st.button("Extract"):
@@ -2729,6 +2989,8 @@ elif selected_tool == "121. Webpage Text Extractor":
             st.error(f"Failed: {e}")
 
 elif selected_tool == "122. HTML to Markdown Converter":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Manage and organize email contact lists. Segment your audience for targeted, personalized campaigns.")
     st.header("HTML → Markdown Converter")
     raw = st.text_area("Paste HTML:", height=240,
                        value="<h1>Hello</h1><p>This is <b>bold</b> and <a href='https://x.com'>a link</a>.</p>")
@@ -2751,6 +3013,8 @@ elif selected_tool == "122. HTML to Markdown Converter":
         st.download_button("Download .md", out, "converted.md", "text/markdown")
 
 elif selected_tool == "123. Text Prefix/Suffix Bulk Adder":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Plan and track email campaign sequences. Automate nurture flows that convert subscribers to customers.")
     st.header("Prefix / Suffix Bulk Adder")
     raw = st.text_area("One item per line:", height=220)
     prefix = st.text_input("Prefix", "https://example.com/")
@@ -2768,6 +3032,8 @@ elif selected_tool == "123. Text Prefix/Suffix Bulk Adder":
         st.download_button("Download .txt", out, "bulk_output.txt", "text/plain")
 
 elif selected_tool == "124. Duplicate Line Remover":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Analyze email engagement metrics. Understand open rates, clicks, and what drives conversions.")
     st.header("Duplicate Line Remover")
     raw = st.text_area("Paste lines:", height=240)
     case_insensitive = st.checkbox("Case-insensitive", False)
@@ -2791,6 +3057,8 @@ elif selected_tool == "124. Duplicate Line Remover":
         st.download_button("Download .txt", result, "deduped.txt", "text/plain")
 
 elif selected_tool == "125. List Alphabetizer & Sorter":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Score email subject lines for effectiveness. Write subject lines that get opened instead of deleted.")
     st.header("List Alphabetizer & Sorter")
     raw = st.text_area("One item per line:", height=240)
     mode = st.selectbox("Sort mode", ["A → Z", "Z → A", "Length (short→long)", "Length (long→short)", "Numeric ascending", "Numeric descending"])
@@ -2814,6 +3082,8 @@ elif selected_tool == "125. List Alphabetizer & Sorter":
 
 # ===== Data & List Management (126-135) =====
 elif selected_tool == "126. List Randomizer":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Validate email addresses before sending. Clean your list and reduce bounces to protect sender reputation.")
     st.header("List Randomizer (Shuffle)")
     raw = st.text_area("One item per line:", height=220)
     seed = st.text_input("Seed (optional, for reproducibility)", "")
@@ -2826,6 +3096,8 @@ elif selected_tool == "126. List Randomizer":
         st.download_button("Download .txt", out, "shuffled.txt", "text/plain")
 
 elif selected_tool == "127. CSV Column Extractor":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Track email delivery and bounce rates. Monitor deliverability and fix issues before they impact campaigns.")
     st.header("CSV Column Extractor")
     up = st.file_uploader("Upload CSV", type=["csv"])
     if up:
@@ -2848,6 +3120,8 @@ elif selected_tool == "127. CSV Column Extractor":
                 st.download_button("Download .txt", buf, "extracted.txt", "text/plain")
 
 elif selected_tool == "128. JSON to XML Converter":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Generate email footers with legal compliance. Include proper unsubscribe links and business information.")
     st.header("JSON → XML Converter")
     raw = st.text_area("Paste JSON:", height=220, value='{"order": {"id": 42, "items": ["a", "b"]}}')
     root = st.text_input("Root tag (when JSON is a list)", "items")
@@ -2875,6 +3149,8 @@ elif selected_tool == "128. JSON to XML Converter":
             st.error(f"Conversion failed: {e}")
 
 elif selected_tool == "129. Phone Number Standardizer":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Run A/B tests on email campaigns. Optimize every element of your emails with data-driven testing.")
     st.header("Phone Number Standardizer")
     raw = st.text_area("Paste numbers (one per line):", "(205) 555-1234\n205.555.9876\n+1 205 555 4321\n555-1212", height=180)
     fmt = st.selectbox("Output format", [
@@ -2902,6 +3178,8 @@ elif selected_tool == "129. Phone Number Standardizer":
         st.download_button("Download .txt", result, "phones.txt", "text/plain")
 
 elif selected_tool == "130. Email Address Extractor":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Calculate email marketing ROI. Prove the value of your email program with hard numbers.")
     st.header("Email Address Extractor")
     raw = st.text_area("Paste any text (HTML, emails, dumps, etc.):", height=260)
     dedupe = st.checkbox("De-duplicate", True)
@@ -2916,6 +3194,8 @@ elif selected_tool == "130. Email Address Extractor":
         st.download_button("Download .txt", out, "emails.txt", "text/plain")
 
 elif selected_tool == "131. URL Extractor":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Plan and organize social media content. Stay consistent across platforms with a structured content calendar.")
     st.header("URL Extractor")
     raw = st.text_area("Paste any text:", height=260)
     dedupe = st.checkbox("De-duplicate", True)
@@ -2930,6 +3210,8 @@ elif selected_tool == "131. URL Extractor":
         st.download_button("Download .txt", out, "urls.txt", "text/plain")
 
 elif selected_tool == "132. SQL Insert Statement Generator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Track social media follower growth. Monitor audience growth and identify what's driving new follows.")
     st.header("SQL INSERT Generator (from CSV)")
     up = st.file_uploader("Upload CSV", type=["csv"])
     table = st.text_input("Table name", "customers")
@@ -2954,6 +3236,8 @@ elif selected_tool == "132. SQL Insert Statement Generator":
         st.download_button("Download .sql", out, f"{table}_inserts.sql", "text/plain")
 
 elif selected_tool == "133. YAML to JSON Converter":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Plan and track social advertising campaigns. Manage ad spend and performance across all platforms.")
     st.header("YAML → JSON Converter")
     raw = st.text_area("Paste YAML:", height=240,
                        value="name: Digital Envisioned\ntools: 200\nplans:\n  - free\n  - pro\n  - elite")
@@ -2977,6 +3261,8 @@ elif selected_tool == "133. YAML to JSON Converter":
             st.error(f"Conversion failed: {e}")
 
 elif selected_tool == "134. Data Anonymizer":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Build social media reporting dashboards. Present results to clients and stakeholders with clear metrics.")
     st.header("Data Anonymizer (Mask Emails / Phones / Cards)")
     raw = st.text_area("Paste text:", height=240,
                        value="Contact josh@example.com or 205-555-1234. Card 4242 4242 4242 4242.")
@@ -2995,6 +3281,8 @@ elif selected_tool == "134. Data Anonymizer":
         st.download_button("Download .txt", out, "anonymized.txt", "text/plain")
 
 elif selected_tool == "135. Word Frequency Counter":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Analyze audience demographics and interests. Understand who your followers are to create content they love.")
     st.header("Word Frequency Counter")
     raw = st.text_area("Paste text:", height=240)
     top_n = st.slider("Top N", 5, 100, 25)
@@ -3011,6 +3299,8 @@ elif selected_tool == "135. Word Frequency Counter":
 
 # ===== Web & Network Tools (136-145) =====
 elif selected_tool == "136. WHOIS Data Lookup":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Plan social media contests and giveaways. Grow your audience with engaging promotional campaigns.")
     st.header("WHOIS Data Lookup")
     domain = st.text_input("Domain", "digitalenvisioned.net")
     if domain and st.button("Lookup"):
@@ -3037,6 +3327,8 @@ elif selected_tool == "136. WHOIS Data Lookup":
                 st.error(f"Lookup failed: {e}")
 
 elif selected_tool == "137. DNS Record Checker":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Manage brand reputation across social platforms. Monitor mentions and respond quickly to protect your brand.")
     st.header("DNS Record Checker")
     domain = st.text_input("Domain", "digitalenvisioned.net")
     rtypes = st.multiselect("Record types", ["A", "AAAA", "MX", "NS", "TXT", "CNAME", "SOA"],
@@ -3065,6 +3357,8 @@ elif selected_tool == "137. DNS Record Checker":
             for v in vals: st.code(v)
 
 elif selected_tool == "138. HTTP Status Code Header Checker":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Generate social media story content ideas. Keep your Stories feed fresh with planned, engaging content.")
     st.header("HTTP Status & Header Checker")
     url = st.text_input("URL", "https://digitalenvisioned.net/")
     method = st.selectbox("Method", ["HEAD", "GET"])
@@ -3084,6 +3378,8 @@ elif selected_tool == "138. HTTP Status Code Header Checker":
             st.error(f"Request failed: {e}")
 
 elif selected_tool == "139. User-Agent String Parser":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Plan social media influencer collaborations. Partner with creators who can authentically promote your brand.")
     st.header("User-Agent String Parser")
     ua = st.text_area("Paste a User-Agent string:", height=100,
                       value="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36")
@@ -3115,6 +3411,8 @@ elif selected_tool == "139. User-Agent String Parser":
                      use_container_width=True)
 
 elif selected_tool == "140. URL Redirect Tracer":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Analyze trending topics and hashtags. Stay relevant by jumping on trends that fit your brand.")
     st.header("URL Redirect Tracer")
     url = st.text_input("URL", "https://bit.ly/3xyz")
     if url and st.button("Trace"):
@@ -3132,6 +3430,8 @@ elif selected_tool == "140. URL Redirect Tracer":
             st.error(f"Trace failed: {e}")
 
 elif selected_tool == "141. Meta Tag Extractor":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Generate professional invoice documents. Bill clients with polished invoices that include all required details.")
     st.header("Meta Tag Extractor")
     url = st.text_input("Page URL", "https://digitalenvisioned.net/")
     if url and st.button("Extract"):
@@ -3156,6 +3456,8 @@ elif selected_tool == "141. Meta Tag Extractor":
             st.error(f"Failed: {e}")
 
 elif selected_tool == "142. Robots.txt Generator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Create project proposals with scope and pricing. Win more projects with professional, detailed proposals.")
     st.header("Robots.txt Generator")
     sitemap = st.text_input("Sitemap URL", "https://digitalenvisioned.net/sitemap.xml")
     allow_all = st.checkbox("Allow all crawlers", True)
@@ -3178,6 +3480,8 @@ elif selected_tool == "142. Robots.txt Generator":
         st.download_button("Download robots.txt", out, "robots.txt", "text/plain")
 
 elif selected_tool == "143. Sitemap.xml Basic Generator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Track project budgets and spending. Stay on budget by monitoring expenses against projections.")
     st.header("Sitemap.xml Generator")
     raw = st.text_area("URLs (one per line)", "https://digitalenvisioned.net/\nhttps://digitalenvisioned.net/about\nhttps://digitalenvisioned.net/pricing", height=180)
     freq = st.selectbox("Change frequency", ["always", "hourly", "daily", "weekly", "monthly", "yearly", "never"], index=3)
@@ -3199,6 +3503,8 @@ elif selected_tool == "143. Sitemap.xml Basic Generator":
         st.download_button("Download sitemap.xml", xml, "sitemap.xml", "application/xml")
 
 elif selected_tool == "144. IP Subnet Calculator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Log and track project time entries. Understand where time goes and bill accurately for your work.")
     st.header("IP Subnet Calculator (CIDR)")
     cidr = st.text_input("CIDR (IPv4 or IPv6)", "192.168.1.0/24")
     if cidr and st.button("Calculate"):
@@ -3222,6 +3528,8 @@ elif selected_tool == "144. IP Subnet Calculator":
             st.error(f"Invalid CIDR: {e}")
 
 elif selected_tool == "145. MAC Address Vendor Lookup":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Calculate project profitability metrics. Know which projects make money and which drain resources.")
     st.header("MAC Address Vendor Lookup")
     mac = st.text_input("MAC address", "B8:27:EB:12:34:56")
     OUI = {
@@ -3259,6 +3567,8 @@ elif selected_tool == "145. MAC Address Vendor Lookup":
 
 # ── 146. Color Contrast Checker (WCAG) ───────
 elif selected_tool == "146. Color Contrast Checker":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("View optimal image dimensions for every major ad platform. Ensure your ads display perfectly on Facebook, Instagram, Google, and more.")
     st.header("🎨 Color Contrast Checker (WCAG)")
 
     def _hex_to_rgb(h):
@@ -3307,6 +3617,8 @@ elif selected_tool == "146. Color Contrast Checker":
 
 # ── 147. CSS Gradient Code Generator ─────────
 elif selected_tool == "147. CSS Gradient Code Generator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Generate harmonious brand color palettes from a seed color. Create cohesive visual identities that look professional across all media.")
     st.header("🌈 CSS Gradient Code Generator")
     grad_type = st.selectbox("Gradient type", ["linear", "radial"])
     col1, col2 = st.columns(2)
@@ -3333,6 +3645,8 @@ elif selected_tool == "147. CSS Gradient Code Generator":
 
 # ── 148. Base64 to Image Decoder ─────────────
 elif selected_tool == "148. Base64 to Image Decoder":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Get exact specs for social media cover photos and banners. Size your banners correctly so they never get cropped or distorted.")
     st.header("🖼️ Base64 → Image Decoder")
     b64_str = st.text_area("Paste Base64-encoded image string", height=180,
                            placeholder="data:image/png;base64,iVBORw0KGgo...")
@@ -3350,6 +3664,8 @@ elif selected_tool == "148. Base64 to Image Decoder":
 
 # ── 149. Image to Base64 Encoder ─────────────
 elif selected_tool == "149. Image to Base64 Encoder":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Find font combinations that work beautifully together. Elevate your designs with professionally paired heading and body fonts.")
     st.header("📷 Image → Base64 Encoder")
     uploaded = st.file_uploader("Upload an image", type=["png", "jpg", "jpeg", "gif", "webp"])
     if uploaded:
@@ -3365,6 +3681,8 @@ elif selected_tool == "149. Image to Base64 Encoder":
 
 # ── 150. Custom QR Code Builder (Color/Size) ─
 elif selected_tool == "150. Custom QR Code Builder":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Plan flyer layouts with headline, body, and CTA placement. Create print and digital flyers that grab attention and drive action.")
     st.header("📱 Custom QR Code Builder")
     data = st.text_input("Data / URL to encode", "https://digitalenvisioned.net")
     col1, col2, col3 = st.columns(3)
@@ -3390,6 +3708,8 @@ elif selected_tool == "150. Custom QR Code Builder":
 
 # ── 151. Favicon Generator (16×16 / 32×32) ───
 elif selected_tool == "151. Favicon Generator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Create video scripts with scene-by-scene storyboard outlines. Plan video content efficiently so every second counts.")
     st.header("⭐ Favicon Generator")
     uploaded = st.file_uploader("Upload source image", type=["png", "jpg", "jpeg", "webp"])
     sizes = st.multiselect("Output sizes", ["16x16", "32x32", "48x48", "64x64", "128x128"],
@@ -3417,6 +3737,8 @@ elif selected_tool == "151. Favicon Generator":
 
 # ── 152. SVG Code Viewer ─────────────────────
 elif selected_tool == "152. SVG Code Viewer":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Plan and compare thumbnail designs for A/B testing. Increase click-through rates by testing different visual approaches.")
     st.header("🔷 SVG Code Viewer")
     svg_code = st.text_area("Paste SVG code", height=250,
                             value='<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200">\n'
@@ -3433,6 +3755,8 @@ elif selected_tool == "152. SVG Code Viewer":
 
 # ── 153. Hex to RGB / RGB to Hex Converter ───
 elif selected_tool == "153. Hex to RGB / RGB to Hex Converter":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Generate creative briefs for motion graphics projects. Communicate your vision clearly to animators and designers.")
     st.header("🎨 Hex ↔ RGB Converter")
     direction = st.radio("Conversion direction", ["Hex → RGB", "RGB → Hex"])
     if direction == "Hex → RGB":
@@ -3467,6 +3791,8 @@ elif selected_tool == "153. Hex to RGB / RGB to Hex Converter":
 
 # ── 154. RGB to CMYK Converter ───────────────
 elif selected_tool == "154. RGB to CMYK Converter":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Get specifications and tips for podcast cover art design. Stand out in podcast directories with eye-catching, compliant artwork.")
     st.header("🖨️ RGB → CMYK Converter")
     col1, col2, col3 = st.columns(3)
     with col1:
@@ -3499,6 +3825,8 @@ elif selected_tool == "154. RGB to CMYK Converter":
 
 # ── 155. Text to Handwriting Previewer ────────
 elif selected_tool == "155. Text to Handwriting Previewer":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Run a pre-flight checklist before sending designs to print. Avoid costly printing errors with a comprehensive quality check.")
     st.header("✍️ Text to Handwriting Previewer")
     text = st.text_area("Enter your text", "The quick brown fox jumps over the lazy dog.", height=120)
     font_options = {
@@ -3533,6 +3861,8 @@ elif selected_tool == "155. Text to Handwriting Previewer":
 
 # ── 156. SSL Certificate Checker ─────────────
 elif selected_tool == "156. SSL Certificate Checker":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Check SSL certificate details and expiration for any domain. Prevent security warnings and maintain customer trust.")
     st.header("🔒 SSL Certificate Checker")
     domain = st.text_input("Domain (e.g. google.com)", "google.com")
 
@@ -3571,6 +3901,8 @@ elif selected_tool == "156. SSL Certificate Checker":
 
 # ── 157. Basic Port Checker ──────────────────
 elif selected_tool == "157. Basic Port Checker":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Inspect HTTP response headers from any URL. Debug web performance, caching, and security configurations.")
     st.header("🔌 Basic Port Checker")
     host = st.text_input("Host / IP address", "google.com")
     common_ports = {
@@ -3604,6 +3936,8 @@ elif selected_tool == "157. Basic Port Checker":
 
 # ── 158. BGP ASN Lookup (Simulated) ──────────
 elif selected_tool == "158. BGP ASN Lookup":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Scan common ports on a target host to check availability. Identify open services and potential security vulnerabilities.")
     st.header("🌐 BGP ASN Lookup (Simulated)")
     asn_input = st.text_input("Enter ASN number (e.g. 15169) or IP address", "15169")
 
@@ -3644,6 +3978,8 @@ elif selected_tool == "158. BGP ASN Lookup":
 
 # ── 159. HTTP API Request Tester (GET/POST) ──
 elif selected_tool == "159. HTTP API Request Tester":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Audit password strength with entropy and crack-time estimates. Ensure your team's passwords meet enterprise security standards.")
     st.header("🌐 HTTP API Request Tester")
     method = st.selectbox("Method", ["GET", "POST", "PUT", "DELETE", "PATCH"])
     url = st.text_input("URL", "https://httpbin.org/get")
@@ -3685,6 +4021,8 @@ elif selected_tool == "159. HTTP API Request Tester":
 
 # ── 160. Password Strength Analyzer ──────────
 elif selected_tool == "160. Password Strength Analyzer":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Generate firewall rule templates for common configurations. Secure your network with properly structured access control rules.")
     st.header("🔑 Password Strength Analyzer")
     pw = st.text_input("Enter a password to analyze", type="password")
 
@@ -3758,6 +4096,8 @@ elif selected_tool == "160. Password Strength Analyzer":
 
 # ── 161. XML Formatter & Validator ────────────
 elif selected_tool == "161. XML Formatter & Validator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Generate Python code snippets for common tasks. Speed up development with ready-to-use, tested code blocks.")
     st.header("📝 XML Formatter & Validator")
     xml_input = st.text_area("Paste XML", height=250,
                              value='<root><item id="1"><name>Test</name></item></root>')
@@ -3778,6 +4118,8 @@ elif selected_tool == "161. XML Formatter & Validator":
 
 # ── 162. Roman Numeral Converter ──────────────
 elif selected_tool == "162. Roman Numeral Converter":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Create modern HTML5 boilerplate with best practices. Start every web project with a solid, standards-compliant foundation.")
     st.header("🏛️ Roman Numeral Converter")
     direction = st.radio("Direction", ["Integer → Roman", "Roman → Integer"])
 
@@ -3823,6 +4165,8 @@ elif selected_tool == "162. Roman Numeral Converter":
 
 # ── 163. Unicode Character Finder ─────────────
 elif selected_tool == "163. Unicode Character Finder":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Convert between JSON and YAML formats seamlessly. Switch between configuration formats for different tools and platforms.")
     st.header("🔤 Unicode Character Finder")
     import unicodedata
     mode = st.radio("Mode", ["Search by name", "Lookup by character", "Lookup by code point"])
@@ -3887,6 +4231,8 @@ elif selected_tool == "163. Unicode Character Finder":
 
 # ── 164. YAML to XML Converter ───────────────
 elif selected_tool == "164. YAML to XML Converter":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Build SQL queries visually with SELECT, JOIN, and WHERE clauses. Write complex database queries without memorizing syntax.")
     st.header("🔄 YAML → XML Converter")
     import yaml as yaml_mod
 
@@ -3927,6 +4273,8 @@ elif selected_tool == "164. YAML to XML Converter":
 
 # ── 165. Article Spinner (synonym swapper) ────
 elif selected_tool == "165. Article Spinner":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Create Markdown tables from rows and columns of data. Build formatted tables for GitHub READMEs and documentation.")
     st.header("🔁 Article Spinner")
     text = st.text_area("Paste article text", height=200,
                         placeholder="Enter text to spin with basic synonym replacement...")
@@ -3988,6 +4336,8 @@ elif selected_tool == "165. Article Spinner":
 
 # ── 166. YouTube Tag Extractor ────────────────
 elif selected_tool == "166. YouTube Tag Extractor":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Write engaging Instagram captions with hooks and hashtags. Boost engagement with captions that stop the scroll and spark conversation.")
     st.header("🎬 YouTube Tag Extractor")
     yt_input = st.text_input("YouTube URL or paste video description/text",
                              "https://www.youtube.com/watch?v=dQw4w9WgXcQ")
@@ -4031,6 +4381,8 @@ elif selected_tool == "166. YouTube Tag Extractor":
 
 # ── 167. TikTok Caption Spacer & Formatter ───
 elif selected_tool == "167. TikTok Caption Spacer & Formatter":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Plan Facebook Group content strategies for community building. Grow and engage your Facebook community with consistent valuable posts.")
     st.header("🎵 TikTok Caption Spacer & Formatter")
     caption = st.text_area("Enter your TikTok caption", height=150,
                            placeholder="Write your caption here...")
@@ -4066,6 +4418,8 @@ elif selected_tool == "167. TikTok Caption Spacer & Formatter":
 
 # ── 168. LinkedIn Professional Headline Generator
 elif selected_tool == "168. LinkedIn Professional Headline Generator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Write short-form video scripts optimized for TikTok. Create viral-ready scripts that hook viewers in the first 3 seconds.")
     st.header("💼 LinkedIn Professional Headline Generator")
     role = st.text_input("Your role / job title", "Digital Marketing Strategist")
     industry = st.text_input("Industry / niche", "SaaS & Automation")
@@ -4096,6 +4450,8 @@ elif selected_tool == "168. LinkedIn Professional Headline Generator":
 
 # ── 169. Pinterest Pin Title Optimizer ────────
 elif selected_tool == "169. Pinterest Pin Title Optimizer":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Plan Pinterest board strategies for long-term traffic. Build a content library that drives consistent organic traffic for months.")
     st.header("📌 Pinterest Pin Title Optimizer")
     topic = st.text_input("Pin topic / content", "Home Office Setup Ideas")
     keywords = st.text_input("Target keywords (comma-separated)", "home office, productivity, remote work")
@@ -4132,6 +4488,8 @@ elif selected_tool == "169. Pinterest Pin Title Optimizer":
 
 # ── 170. Social Media Post Scheduler (UI) ────
 elif selected_tool == "170. Social Media Post Scheduler":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Outline long-form LinkedIn articles for professional authority. Establish thought leadership and attract B2B leads with in-depth content.")
     st.header("📅 Social Media Post Scheduler")
     st.caption("UI mockup — plan & preview your posting calendar.")
 
@@ -4170,6 +4528,8 @@ elif selected_tool == "170. Social Media Post Scheduler":
 
 # ── 171. Facebook Ad Copy Generator ──────────
 elif selected_tool == "171. Facebook Ad Copy Generator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Run a comprehensive audit of your social media presence. Identify gaps, inconsistencies, and optimization opportunities across platforms.")
     st.header("📘 Facebook Ad Copy Generator")
     product = st.text_input("Product / Service name", "Elite Automation Suite")
     audience = st.text_input("Target audience", "Small business owners in Alabama")
@@ -4220,6 +4580,8 @@ elif selected_tool == "171. Facebook Ad Copy Generator":
 
 # ── 172. Instagram Carousel Idea Generator ────
 elif selected_tool == "172. Instagram Carousel Idea Generator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Generate attention-grabbing hooks for social media content. Create opening lines that make people stop scrolling and pay attention.")
     st.header("📸 Instagram Carousel Idea Generator")
     niche = st.text_input("Your niche / industry", "Digital Marketing & Automation")
     goal = st.selectbox("Carousel goal", ["Educate", "Sell", "Engage", "Inspire", "Entertain"])
@@ -4290,6 +4652,8 @@ elif selected_tool == "172. Instagram Carousel Idea Generator":
 
 # ── 173. Video Script Hook Generator ─────────
 elif selected_tool == "173. Video Script Hook Generator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Calculate engagement rates for any social media post. Measure content performance and identify what resonates with your audience.")
     st.header("🎥 Video Script Hook Generator")
     topic = st.text_input("Video topic", "Why most small businesses fail at automation")
     platform = st.selectbox("Platform", ["YouTube", "TikTok", "Instagram Reels",
@@ -4352,6 +4716,8 @@ elif selected_tool == "173. Video Script Hook Generator":
 
 # ── 174. Newsletter Subject Line Scorer ───────
 elif selected_tool == "174. Newsletter Subject Line Scorer":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Plan and template social proof screenshots for marketing. Turn customer wins and reviews into compelling visual testimonials.")
     st.header("📧 Newsletter Subject Line Scorer")
     subject = st.text_input("Enter subject line", "🚀 5 Automation Hacks That Save 10 Hours/Week")
 
@@ -4428,6 +4794,8 @@ elif selected_tool == "174. Newsletter Subject Line Scorer":
 
 # ── 175. Competitor Keyword Extractor ─────────
 elif selected_tool == "175. Competitor Keyword Extractor":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Track and analyze hashtag performance metrics. Double down on hashtags that drive reach and cut the ones that don't.")
     st.header("🔍 Competitor Keyword Extractor")
     url = st.text_input("Competitor URL", "https://digitalenvisioned.net")
     st.caption("Extracts keywords from page title, headings, meta tags, and body text.")
@@ -4510,6 +4878,8 @@ elif selected_tool == "175. Competitor Keyword Extractor":
 
 # ── 176. Local SEO Citation Format Generator ──
 elif selected_tool == "176. Local SEO Citation Format Generator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Run a comprehensive Local SEO audit for your business. Ensure your business appears in local search results and Google Maps.")
     st.header("📍 Local SEO Citation Format Generator")
     st.caption("Generate consistent NAP (Name, Address, Phone) citation formats for top directories.")
 
@@ -4616,6 +4986,8 @@ elif selected_tool == "176. Local SEO Citation Format Generator":
 
 # ── 177. Google My Business Review Link Builder
 elif selected_tool == "177. Google My Business Review Link Builder":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Optimize your Google Business Profile for maximum visibility. Get more calls, visits, and leads from Google's local search results.")
     st.header("⭐ Google My Business Review Link Builder")
     st.caption("Create a direct review link for customers. They click it → your Google review form opens.")
 
@@ -4662,6 +5034,8 @@ elif selected_tool == "177. Google My Business Review Link Builder":
 
 # ── 178. AI Prompt Architect ─────────────────
 elif selected_tool == "178. AI Prompt Architect":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Build and manage local business citations for SEO. Strengthen your local search presence with consistent NAP data across directories.")
     st.header("🧠 AI Prompt Architect")
     st.caption("Build optimized prompts for ChatGPT, Claude, Gemini, and other LLMs.")
 
@@ -4750,6 +5124,8 @@ elif selected_tool == "178. AI Prompt Architect":
 
 # ── 179. Cold Email Sequence Framework Builder ─
 elif selected_tool == "179. Cold Email Sequence Framework Builder":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Generate professional responses to customer reviews. Build trust and loyalty by responding thoughtfully to every review.")
     st.header("📧 Cold Email Sequence Framework Builder")
 
     prospect_type = st.text_input("Who are you reaching out to?", "Local business owners in Birmingham, AL")
@@ -4872,6 +5248,8 @@ elif selected_tool == "179. Cold Email Sequence Framework Builder":
 
 # ── 180. Customer Avatar / Buyer Persona Generator
 elif selected_tool == "180. Customer Avatar / Buyer Persona Generator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Create briefs for location-specific landing pages. Convert local searchers into customers with geo-targeted content.")
     st.header("🎯 Customer Avatar / Buyer Persona Generator")
 
     col1, col2 = st.columns(2)
@@ -4948,6 +5326,8 @@ elif selected_tool == "180. Customer Avatar / Buyer Persona Generator":
 
 # ── 181. Agency Proposal Outline Generator ────
 elif selected_tool == "181. Agency Proposal Outline Generator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Write ad copy targeted to specific geographic areas. Speak directly to local audiences with relevant, location-aware messaging.")
     st.header("📄 Agency Proposal Outline Generator")
 
     col1, col2 = st.columns(2)
@@ -5063,6 +5443,8 @@ Client Signature: _________________________  Date: ________
 
 # ── 182. Invoice Number Sequence Generator ────
 elif selected_tool == "182. Invoice Number Sequence Generator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Generate client onboarding checklists for smooth starts. Set new client relationships up for success from day one.")
     st.header("🧾 Invoice Number Sequence Generator")
 
     col1, col2 = st.columns(2)
@@ -5106,6 +5488,8 @@ elif selected_tool == "182. Invoice Number Sequence Generator":
 
 # ── 183. Sales Funnel Conversion Step Calculator
 elif selected_tool == "183. Sales Funnel Conversion Step Calculator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Create detailed project scope documents with deliverables. Prevent scope creep and miscommunication with clear written agreements.")
     st.header("📊 Sales Funnel Conversion Step Calculator")
 
     stages = st.text_area("Funnel stages (one per line, top to bottom)",
@@ -5157,6 +5541,8 @@ elif selected_tool == "183. Sales Funnel Conversion Step Calculator":
 
 # ── 184. A/B Test Split Traffic Calculator ────
 elif selected_tool == "184. A/B Test Split Traffic Calculator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Generate professional weekly status reports. Keep stakeholders informed and demonstrate progress consistently.")
     st.header("🧪 A/B Test Split Traffic Calculator")
 
     col1, col2 = st.columns(2)
@@ -5220,6 +5606,8 @@ elif selected_tool == "184. A/B Test Split Traffic Calculator":
 
 # ── 185. Affiliate Link Cloaker ──────────────
 elif selected_tool == "185. Affiliate Link Cloaker":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Write step-by-step SOPs for repeatable processes. Document processes so your team can execute consistently without you.")
     st.header("🔗 Affiliate Link Cloaker")
     st.caption("Format clean, branded redirect URLs for your affiliate links.")
 
@@ -5291,6 +5679,8 @@ elif selected_tool == "185. Affiliate Link Cloaker":
 
 # ── 186. Privacy Policy Basic Template Generator
 elif selected_tool == "186. Privacy Policy Basic Template Generator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Create itemized expense reports with category totals. Submit clean, professional expense reports that get approved fast.")
     st.header("🔐 Privacy Policy Basic Template Generator")
     st.warning("⚠️ This generates a *basic template*. Consult a legal professional for compliance.")
 
@@ -5408,6 +5798,8 @@ If you have questions about this Privacy Policy, contact us at:
 
 # ── 187. Terms & Conditions Basic Template Generator
 elif selected_tool == "187. Terms & Conditions Basic Template Generator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Summarize time tracking data by project and category. Understand where your time goes and optimize for profitability.")
     st.header("📜 Terms & Conditions Basic Template Generator")
     st.warning("⚠️ This generates a *basic template*. Consult a legal professional for compliance.")
 
@@ -5527,6 +5919,8 @@ Questions about these Terms? Contact us at:
 
 # ── 188. Brand Mission Statement Builder ──────
 elif selected_tool == "188. Brand Mission Statement Builder":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Configure key performance indicators for dashboard tracking. Track the metrics that matter most to your business growth.")
     st.header("🏢 Brand Mission Statement Builder")
 
     company = st.text_input("Company name", "Digital Envisioned")
@@ -5563,6 +5957,8 @@ elif selected_tool == "188. Brand Mission Statement Builder":
 
 # ── 189. Slogan & Tagline Brainstormer ────────
 elif selected_tool == "189. Slogan & Tagline Brainstormer":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Compare vendors using weighted scoring criteria. Make data-driven vendor selection decisions for your business.")
     st.header("💡 Slogan & Tagline Brainstormer")
 
     brand = st.text_input("Brand name", "Digital Envisioned")
@@ -5649,6 +6045,8 @@ elif selected_tool == "189. Slogan & Tagline Brainstormer":
 
 # ── 190. Brand Core Values Extractor ──────────
 elif selected_tool == "190. Brand Core Values Extractor":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Generate QBR presentation outlines with key metrics. Run strategic quarterly reviews that align teams and drive results.")
     st.header("💎 Brand Core Values Extractor")
 
     brand = st.text_input("Brand / Company name", "Digital Envisioned", key="bcv_brand")
@@ -5725,6 +6123,8 @@ elif selected_tool == "190. Brand Core Values Extractor":
 
 # ── 191. Meeting Agenda Template Builder ──────
 elif selected_tool == "191. Meeting Agenda Template Builder":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Generate executive summaries from detailed reports. Communicate key findings to leadership in concise, actionable format.")
     st.header("📋 Meeting Agenda Template Builder")
 
     meeting_title = st.text_input("Meeting title", "Weekly Strategy Sync")
@@ -5824,6 +6224,8 @@ Next meeting: _______________
 
 # ── 192. Project Timeline Estimator ──────────
 elif selected_tool == "192. Project Timeline Estimator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Prioritize strategic initiatives using impact and effort scores. Focus resources on the initiatives with the highest return potential.")
     st.header("📅 Project Timeline Estimator")
 
     project_name = st.text_input("Project name", "Website Redesign")
@@ -5900,6 +6302,8 @@ elif selected_tool == "192. Project Timeline Estimator":
 
 # ── 193. OKR (Objectives & Key Results) Formatter
 elif selected_tool == "193. OKR Formatter":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Create formal board meeting agendas with governance items. Run professional board meetings that cover strategy, compliance, and growth.")
     st.header("🎯 OKR Formatter (Objectives & Key Results)")
 
     quarter = st.selectbox("Quarter", ["Q1", "Q2", "Q3", "Q4"])
@@ -5961,6 +6365,8 @@ Period: {quarter} {year}
 
 # ── 194. SWOT Analysis Matrix Builder ─────────
 elif selected_tool == "194. SWOT Analysis Matrix Builder":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Generate monthly investor update communications. Keep investors informed and confident with structured progress reports.")
     st.header("📊 SWOT Analysis Matrix Builder")
 
     topic = st.text_input("Subject of analysis", "Digital Envisioned — Elite Automation Suite")
@@ -6031,6 +6437,8 @@ elif selected_tool == "194. SWOT Analysis Matrix Builder":
 
 # ── 195. PESTLE Analysis Framework Generator ──
 elif selected_tool == "195. PESTLE Analysis Framework Generator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Evaluate new market opportunities with scoring frameworks. Identify the most promising markets for your next expansion move.")
     st.header("🌍 PESTLE Analysis Framework Generator")
 
     subject = st.text_input("Subject of analysis", "Launching a SaaS product in Alabama")
@@ -6079,6 +6487,8 @@ elif selected_tool == "195. PESTLE Analysis Framework Generator":
 
 # ── 196. Product Pricing Tier Structurer ──────
 elif selected_tool == "196. Product Pricing Tier Structurer":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Structure product pricing tiers with feature matrices. Maximize revenue with pricing that gives every customer segment a reason to buy.")
     st.header("💲 Product Pricing Tier Structurer")
 
     product_name = st.text_input("Product name", "Elite Automation Suite")
@@ -6148,6 +6558,8 @@ elif selected_tool == "196. Product Pricing Tier Structurer":
 
 # ── 197. Profit Margin vs. Markup Visualizer ──
 elif selected_tool == "197. Profit Margin vs. Markup Visualizer":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Visualize the relationship between profit margin and markup. Understand pricing dynamics and set prices that protect your bottom line.")
     st.header("📈 Profit Margin vs. Markup Visualizer")
 
     mode = st.radio("Calculate from:", ["Cost & Selling Price", "Cost & Desired Margin",
@@ -6222,6 +6634,8 @@ elif selected_tool == "197. Profit Margin vs. Markup Visualizer":
 
 # ── 198. Employee Onboarding Checklist Generator
 elif selected_tool == "198. Employee Onboarding Checklist Generator":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Generate comprehensive employee onboarding checklists. Get new hires productive faster with a structured first-week experience.")
     st.header("📋 Employee Onboarding Checklist Generator")
 
     col1, col2 = st.columns(2)
@@ -6333,6 +6747,8 @@ Prepared by: {company} HR / Operations
 
 # ── 199. Business Pitch Deck Outline Builder ──
 elif selected_tool == "199. Business Pitch Deck Outline Builder":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Build pitch deck outlines with investor-focused sections. Win funding with a deck that tells your story compellingly and covers every base.")
     st.header("🎤 Business Pitch Deck Outline Builder")
 
     col1, col2 = st.columns(2)
@@ -6416,6 +6832,8 @@ elif selected_tool == "199. Business Pitch Deck Outline Builder":
 
 # ── 200. Master System Diagnostic Dashboard ──
 elif selected_tool == "200. Master System Diagnostic Dashboard":
+    with st.expander("ℹ️ How to use this tool"):
+        st.write("Run diagnostics on all 200 tools and check system health. Verify your entire suite is operational and identify any issues instantly.")
     st.balloons()
     st.header("💯 Master System Diagnostic Dashboard")
     st.markdown(f"*{datetime.now().strftime('%B %d, %Y — %I:%M %p')}*")
