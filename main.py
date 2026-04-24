@@ -1355,14 +1355,9 @@ _max_tools = TIER_LIMITS[_tier]
 
 if _tier == "master":
     st.sidebar.success(f"Signed in: {_email}\n\nTier: **MASTER** (all 500 tools)")
-    if st.sidebar.button("Sign Out"):
-        st.session_state.user_tier = "free"
-        st.session_state.user_email = "Public (Free Tier)"
-        st.session_state.lead_captured = False
-        st.rerun()
 else:
     st.sidebar.info(f"Tier: **FREE** (Tools 1-10)")
-    with st.sidebar.expander("🔑 Master Sign In"):
+    with st.sidebar.expander("\U0001F511 Master Sign In"):
         em = st.text_input("Email:", key="login_email")
         pw = st.text_input("Password:", type="password", key="login_pw")
         if st.button("Sign In"):
@@ -1372,6 +1367,14 @@ else:
                 st.rerun()
             else:
                 st.error("Invalid credentials.")
+
+# ── LOGOUT BUTTON (always visible, full width, red) ──
+st.sidebar.markdown("---")
+if st.sidebar.button("\U0001F6AA LOG OUT", use_container_width=True, type="primary"):
+    for key in list(st.session_state.keys()):
+        del st.session_state[key]
+    st.rerun()
+st.sidebar.markdown("---")
 
 
 
@@ -1750,11 +1753,45 @@ if _num is not None and _num > _max_tools:
 # --- 3. TOOL LOGIC (1-200) ---
 if selected_tool == "Dashboard Home":
     st.title("Welcome to the Digital Envisioned Suite")
-    st.write("A premium fleet of 500 automation tools — choose a category to begin.")
+    st.write("A premium fleet of 500 automation tools \u2014 choose a category or search below.")
+
+    # ── MAIN PAGE SEARCH BAR ──
+    _main_search = st.text_input(
+        "\U0001F50D Search All 500 Tools",
+        placeholder="Type a keyword to find the perfect tool...",
+        key="main_page_search",
+    )
+    if _main_search:
+        _all_flat = [t for tools in CATEGORIES.values() for t in tools]
+        _matches = [t for t in _all_flat if _main_search.lower() in t.lower()]
+        if _matches:
+            st.markdown(f"**{len(_matches)} tool(s) found:**")
+            _cols_per_row = 3
+            for _ri in range(0, len(_matches), _cols_per_row):
+                _row_items = _matches[_ri:_ri + _cols_per_row]
+                _row_cols = st.columns(_cols_per_row)
+                for _ci, _item in enumerate(_row_items):
+                    with _row_cols[_ci]:
+                        if st.button(_item, key=f"main_search_{_item}", use_container_width=True):
+                            st.session_state.selected_tool = _item
+                            st.rerun()
+        else:
+            st.info("No tools match your search. Try a different keyword.")
+    else:
+        st.markdown("---")
+        render_free_tools_grid()
     st.markdown("---")
-    render_free_tools_grid()
-    st.markdown("---")
-    st.caption("Open any expander in the left sidebar to launch a specific tool.")
+    # Quick category overview
+    st.subheader("\U0001F4C2 All Categories")
+    _cat_cols = st.columns(3)
+    for _idx, (_cname, _ctools) in enumerate(CATEGORIES.items()):
+        with _cat_cols[_idx % 3]:
+            with st.expander(f"\U0001F4C1 {_cname}"):
+                for _ct in _ctools:
+                    if st.button(_ct, key=f"cat_browse_{_ct}", use_container_width=True):
+                        st.session_state.selected_tool = _ct
+                        st.rerun()
+    st.caption("Or use the sidebar to navigate categories directly.")
 
 elif selected_tool == "1. QR Generator":
     with st.expander("ℹ️ How to use this tool"):
