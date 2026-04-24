@@ -36,6 +36,304 @@ from pathlib import Path
 # --- 1. AUTH & TIER ACCESS ---
 st.set_page_config(page_title="Digital Envisioned Hub", layout="wide")
 
+# ── PREMIUM DARK THEME ──
+
+st.markdown("""
+<style>
+/* ═══════════════════════════════════════════════════════════
+   DIGITAL ENVISIONED — PREMIUM DARK THEME
+   ═══════════════════════════════════════════════════════════ */
+
+/* --- Global Dark Background --- */
+.stApp, [data-testid="stAppViewContainer"] {
+    background: linear-gradient(165deg, #0a0a0f 0%, #0d1117 40%, #0a0f1a 100%) !important;
+    color: #e0e0e0 !important;
+}
+
+/* --- Sidebar --- */
+[data-testid="stSidebar"] {
+    background: linear-gradient(180deg, #0d1117 0%, #101820 100%) !important;
+    border-right: 1px solid rgba(30,144,255,0.15) !important;
+}
+[data-testid="stSidebar"] .stRadio label,
+[data-testid="stSidebar"] p,
+[data-testid="stSidebar"] span,
+[data-testid="stSidebar"] .stCaption {
+    color: #c0c8d4 !important;
+}
+[data-testid="stSidebar"] .stExpander {
+    background: rgba(30,144,255,0.04) !important;
+    border: 1px solid rgba(30,144,255,0.1) !important;
+    border-radius: 10px !important;
+    margin-bottom: 4px !important;
+}
+
+/* --- Headers --- */
+h1, .stTitle, [data-testid="stHeading"] h1 {
+    background: linear-gradient(135deg, #1E90FF 0%, #00BFFF 50%, #87CEFA 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.5px !important;
+}
+h2, h3, .stSubheader {
+    color: #ffffff !important;
+    font-weight: 700 !important;
+}
+
+/* --- Cards / Containers / Expanders --- */
+.stExpander, [data-testid="stExpander"] {
+    background: rgba(13, 17, 23, 0.8) !important;
+    border: 1px solid rgba(30,144,255,0.12) !important;
+    border-radius: 12px !important;
+    backdrop-filter: blur(10px) !important;
+}
+[data-testid="stExpander"]:hover {
+    border-color: rgba(30,144,255,0.35) !important;
+    box-shadow: 0 0 20px rgba(30,144,255,0.08) !important;
+}
+
+/* --- Metrics --- */
+[data-testid="stMetric"] {
+    background: linear-gradient(145deg, rgba(30,144,255,0.08), rgba(0,191,255,0.04)) !important;
+    border: 1px solid rgba(30,144,255,0.15) !important;
+    border-radius: 12px !important;
+    padding: 16px !important;
+}
+[data-testid="stMetricLabel"] {
+    color: #8899aa !important;
+    font-size: 0.85rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+[data-testid="stMetricValue"] {
+    color: #1E90FF !important;
+    font-weight: 800 !important;
+    font-size: 1.8rem !important;
+}
+
+/* --- Buttons --- */
+.stButton > button {
+    background: linear-gradient(135deg, #1a1f2e, #1e2a3a) !important;
+    color: #e0e8f0 !important;
+    border: 1px solid rgba(30,144,255,0.25) !important;
+    border-radius: 10px !important;
+    padding: 0.55rem 1.2rem !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+    letter-spacing: 0.3px !important;
+}
+.stButton > button:hover {
+    background: linear-gradient(135deg, #1E90FF, #00BFFF) !important;
+    color: #ffffff !important;
+    border-color: #1E90FF !important;
+    box-shadow: 0 0 25px rgba(30,144,255,0.3), 0 4px 15px rgba(0,0,0,0.3) !important;
+    transform: translateY(-1px) !important;
+}
+.stButton > button[kind="primary"],
+button[data-testid="stFormSubmitButton"] {
+    background: linear-gradient(135deg, #1E90FF, #0078d4) !important;
+    color: #ffffff !important;
+    border: none !important;
+    box-shadow: 0 4px 15px rgba(30,144,255,0.25) !important;
+}
+
+/* --- Download Buttons --- */
+.stDownloadButton > button {
+    background: linear-gradient(135deg, #0d7a3e, #0a9e4a) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(10,158,74,0.4) !important;
+    border-radius: 10px !important;
+    font-weight: 700 !important;
+    box-shadow: 0 4px 15px rgba(10,158,74,0.2) !important;
+}
+.stDownloadButton > button:hover {
+    background: linear-gradient(135deg, #0a9e4a, #0dbf5c) !important;
+    box-shadow: 0 0 25px rgba(10,158,74,0.4), 0 4px 15px rgba(0,0,0,0.3) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* --- Link Buttons (Stripe subscribe) --- */
+.stLinkButton > a {
+    background: linear-gradient(135deg, #7c3aed, #5b21b6) !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 10px !important;
+    font-weight: 700 !important;
+    padding: 0.65rem 1.5rem !important;
+    box-shadow: 0 4px 20px rgba(124,58,237,0.3) !important;
+    transition: all 0.3s ease !important;
+    text-decoration: none !important;
+}
+.stLinkButton > a:hover {
+    background: linear-gradient(135deg, #8b5cf6, #6d28d9) !important;
+    box-shadow: 0 0 30px rgba(124,58,237,0.45) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* --- Inputs --- */
+.stTextInput > div > div > input,
+.stNumberInput > div > div > input,
+.stTextArea textarea,
+.stSelectbox > div > div {
+    background: rgba(13,17,23,0.9) !important;
+    color: #e0e8f0 !important;
+    border: 1px solid rgba(30,144,255,0.2) !important;
+    border-radius: 10px !important;
+}
+.stTextInput > div > div > input:focus,
+.stNumberInput > div > div > input:focus,
+.stTextArea textarea:focus {
+    border-color: #1E90FF !important;
+    box-shadow: 0 0 0 2px rgba(30,144,255,0.15) !important;
+}
+
+/* --- Success / Warning / Error / Info boxes --- */
+.stSuccess, [data-testid="stNotification"][data-type="success"] {
+    background: rgba(10,158,74,0.08) !important;
+    border: 1px solid rgba(10,158,74,0.3) !important;
+    border-radius: 10px !important;
+    color: #4ade80 !important;
+}
+.stWarning {
+    background: rgba(245,158,11,0.08) !important;
+    border: 1px solid rgba(245,158,11,0.3) !important;
+    border-radius: 10px !important;
+}
+.stError {
+    background: rgba(239,68,68,0.08) !important;
+    border: 1px solid rgba(239,68,68,0.3) !important;
+    border-radius: 10px !important;
+}
+.stInfo {
+    background: rgba(30,144,255,0.08) !important;
+    border: 1px solid rgba(30,144,255,0.3) !important;
+    border-radius: 10px !important;
+}
+
+/* --- Tabs --- */
+.stTabs [data-baseweb="tab-list"] {
+    gap: 4px !important;
+}
+.stTabs [data-baseweb="tab"] {
+    background: rgba(30,144,255,0.06) !important;
+    border-radius: 8px 8px 0 0 !important;
+    color: #8899aa !important;
+    border: 1px solid rgba(30,144,255,0.1) !important;
+}
+.stTabs [aria-selected="true"] {
+    background: rgba(30,144,255,0.15) !important;
+    color: #1E90FF !important;
+    border-color: #1E90FF !important;
+}
+
+/* --- Dividers --- */
+hr {
+    border-color: rgba(30,144,255,0.12) !important;
+}
+
+/* --- Checkboxes --- */
+.stCheckbox label span {
+    color: #c0c8d4 !important;
+}
+
+/* --- Forms --- */
+[data-testid="stForm"] {
+    background: rgba(13,17,23,0.6) !important;
+    border: 1px solid rgba(30,144,255,0.12) !important;
+    border-radius: 14px !important;
+    padding: 20px !important;
+    backdrop-filter: blur(8px) !important;
+}
+
+/* --- Section Headlines (landing page) --- */
+.section-headline {
+    font-size: 2.2rem !important;
+    font-weight: 800 !important;
+    text-align: center !important;
+    background: linear-gradient(135deg, #ffffff, #1E90FF) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    margin-bottom: 8px !important;
+}
+.section-sub {
+    font-size: 1.1rem !important;
+    text-align: center !important;
+    color: #8899aa !important;
+    margin-bottom: 30px !important;
+}
+.upgrade-headline {
+    font-size: 1.5rem !important;
+    font-weight: 700 !important;
+    text-align: center !important;
+    color: #ffffff !important;
+    margin: 20px 0 !important;
+}
+.hero-title {
+    font-size: 3.5rem !important;
+    font-weight: 900 !important;
+    text-align: center !important;
+    background: linear-gradient(135deg, #ffffff 0%, #1E90FF 60%, #00BFFF 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    line-height: 1.15 !important;
+    margin-bottom: 0 !important;
+}
+.hero-sub {
+    font-size: 1.25rem !important;
+    text-align: center !important;
+    color: #8899aa !important;
+    max-width: 700px !important;
+    margin: 10px auto 40px auto !important;
+}
+
+/* --- Free Tools Grid Cards --- */
+.tool-card {
+    background: linear-gradient(145deg, rgba(30,144,255,0.06), rgba(0,191,255,0.03)) !important;
+    border: 1px solid rgba(30,144,255,0.12) !important;
+    border-radius: 12px !important;
+    padding: 20px !important;
+    text-align: center !important;
+    transition: all 0.3s ease !important;
+}
+.tool-card:hover {
+    border-color: rgba(30,144,255,0.4) !important;
+    box-shadow: 0 0 30px rgba(30,144,255,0.12) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* --- Scrollbar --- */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #0a0a0f; }
+::-webkit-scrollbar-thumb { background: rgba(30,144,255,0.3); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(30,144,255,0.5); }
+
+/* --- Footer / Copyright --- */
+.footer-credit {
+    text-align: center !important;
+    color: #556677 !important;
+    font-size: 0.8rem !important;
+    padding: 30px 0 10px 0 !important;
+    border-top: 1px solid rgba(30,144,255,0.08) !important;
+    margin-top: 40px !important;
+}
+
+/* --- Animations --- */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.stApp > div { animation: fadeInUp 0.5s ease-out; }
+
+/* --- Data Frames / Tables --- */
+.stDataFrame { border-radius: 10px !important; overflow: hidden !important; }
+</style>
+""", unsafe_allow_html=True)
+
+
 MASTER_EMAIL = "jnworkflow@gmail.com"
 MASTER_PASSWORD = "games2Play2$"
 
@@ -1309,12 +1607,12 @@ def render_landing_page():
         )
     with cu2:
         st.link_button(
-            "\u26A1 Subscribe to the Elite Empire \u2014 $97/mo",
+            "\u26A1 Subscribe to the Elite Empire (200 Tools) \u2014 $197/mo",
             UPGRADE_LINKS["empire"],
             use_container_width=True,
         )
     st.link_button(
-        "\U0001F451 Master Elite Automation Tools (Full 500 Tool Access) \u2014 $197/mo",
+        "\U0001F451 Master Elite Automation Tools (Full 500 Tool Access) \u2014 $425/mo",
         UPGRADE_LINKS["master_elite"],
         use_container_width=True,
         type="primary",
@@ -1732,14 +2030,14 @@ def _render_locked(tool_name: str, tool_num: int):
     elif 51 <= tool_num <= 200:
         st.warning("Elite Empire Suite Required.")
         st.link_button(
-            "Upgrade to Empire — $97/mo",
+            "Upgrade to Empire (200 Tools) — $197/mo",
             UPGRADE_LINKS["empire"],
             type="primary",
         )
     else:
         st.warning("Master Elite Suite Required — Full 500 Tool Access.")
         st.link_button(
-            "\U0001F451 Upgrade to Master Elite — $197/mo",
+            "\U0001F451 Upgrade to Master Elite (500 Tools) — $425/mo",
             UPGRADE_LINKS["master_elite"],
             type="primary",
         )
@@ -7301,7 +7599,7 @@ elif selected_tool == "199. Business Pitch Deck Outline Builder":
     with col2:
         solution = st.text_area("Your Solution", "An all-in-one 500-tool SaaS platform that automates marketing, operations, and business tasks.", height=80)
         market_size = st.text_input("Market size (TAM)", "$50B small business software market")
-        revenue_model = st.text_input("Revenue model", "SaaS subscription: $47/mo - $197/mo per user")
+        revenue_model = st.text_input("Revenue model", "SaaS subscription: $47/mo - $425/mo per user")
     traction = st.text_area("Traction / milestones", "500 tools built\nBeta users onboarded\nRevenue growing MoM", height=80)
     ask = st.text_input("The Ask (funding, partnership, etc.)", "$250K seed round for growth & marketing")
 
@@ -16660,3 +16958,12 @@ elif selected_tool == "500. Master System Dashboard v2":
 
 # END OF ORIGINAL TOOLS 176-200
 # ═══════════════════════════════════════════════════════════════════
+
+# ── FOOTER ──
+st.markdown(
+    '<div class="footer-credit">'
+    '\u00A9 2024-2026 Digital Envisioned LLC \u2014 Founded by Joshua Newton \u2014 Birmingham, AL<br>'
+    '<a href="https://digitalenvisioned.net" style="color:#1E90FF;text-decoration:none;">digitalenvisioned.net</a>'
+    '</div>',
+    unsafe_allow_html=True,
+)
